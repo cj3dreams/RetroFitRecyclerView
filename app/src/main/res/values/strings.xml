@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RetroFitRecyclerView</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Вася, иди домой, ты пьян</string>
+    <string name="mainHome">Главная</string>
+    <string name="readLater">Читать позже</string>
+    <string name="favorities">Избранное</string>
+    <string name="profile">Профиль</string>
+</resources>

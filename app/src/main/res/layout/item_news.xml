@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    android:minHeight="350dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="5dp">
+    <RelativeLayout
+        android:id="@+id/itemImgR"
+        android:layout_width="match_parent"
+        android:layout_height="230dp">
+
+        <ImageView
+            android:id="@+id/itemImg"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
+
+        <ImageView
+            android:id="@+id/itemTime"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="12.5dp"
+            android:elevation="10dp"
+            android:background="@drawable/shadowforimageview"
+            android:src="@drawable/ic_baseline_access_time_filled_24" />
+
+        <TextView
+            android:id="@+id/itemTimeTime"
+            android:layout_width="71dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="17.5dp"
+            android:layout_toRightOf="@id/itemTime"
+            android:background="#FFF1D8A0"
+            android:elevation="10dp"
+            android:gravity="center"
+            android:textStyle="" />
+
+        <TextView
+            android:id="@+id/brandName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:background="#FFF1D8A0"
+            android:elevation="10dp"
+            android:gravity="center"
+            android:maxWidth="130dp"
+            android:minWidth="80dp"
+            android:text="Coca Cola"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/itemImgR"
+        android:textColor="@color/black"
+        android:id="@+id/itemNewsTitle"
+        android:text=""
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/itemNewsTitle"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/itemNewsDes"
+        android:text=""
+        />
+</RelativeLayout>

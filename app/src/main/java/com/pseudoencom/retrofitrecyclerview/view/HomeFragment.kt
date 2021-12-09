@@ -32,13 +32,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
-    private lateinit var adapter: MainRecyclerViewAdapter
     private val retrofitService = ApiInterface.create()
-    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
 
@@ -52,13 +49,10 @@ class MainFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_main,container,false)
-        recyclerView = view.findViewById(R.id.rrView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        shimmerFrameLayout = view.findViewById(R.id.shimmer)
-
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home,container,false)
+        var list = listOf("hello", "hello", "hello", "hello")
         val fm:FragmentManager = requireActivity().supportFragmentManager
-        val fragmentAdapter = ViewPagerAdapter(fm)
+        val fragmentAdapter = ViewPagerAdapter(fm,list)
         viewPager = view.findViewById(R.id.vp2)
         viewPager.adapter = fragmentAdapter
 
@@ -71,12 +65,6 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
-            adapter = MainRecyclerViewAdapter(requireContext(), it, this)
-            recyclerView.adapter = adapter
-        })
-        viewModel.sayHello(shimmerFrameLayout, recyclerView, view)
     }
 
     override fun onClick(v: View?) {

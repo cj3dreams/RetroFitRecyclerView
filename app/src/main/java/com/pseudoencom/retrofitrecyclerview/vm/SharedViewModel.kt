@@ -1,21 +1,14 @@
 package com.pseudoencom.retrofitrecyclerview.vm
 
-import android.content.Context
-import android.provider.ContactsContract
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
-import com.pseudoencom.retrofitrecyclerview.ApiInterface
-import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
-import com.pseudoencom.retrofitrecyclerview.model.Source
-import com.pseudoencom.retrofitrecyclerview.view.MainFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

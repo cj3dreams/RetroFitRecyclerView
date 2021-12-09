@@ -13,11 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.model.Article
-import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
-import com.pseudoencom.retrofitrecyclerview.view.MainFragment
+import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
 
 class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>, val onClickListener: View.OnClickListener)
     : RecyclerView.Adapter<MainRecyclerViewAdapter.MyViewHolder>() {
@@ -71,7 +69,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
             holder.itemView.setOnClickListener(onClickListener)
         } catch (ex: Exception) {
             ex.message?.let {
-                Log.e(MainFragment::class.java.simpleName, it)
+                Log.e(NewsFragment::class.java.simpleName, it)
             }
         }
     }

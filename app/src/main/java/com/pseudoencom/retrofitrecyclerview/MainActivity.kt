@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.frgChanger, MainFragment())
-                .commit()
-        }
+
     }
 }

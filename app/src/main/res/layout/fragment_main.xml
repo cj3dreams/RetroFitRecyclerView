@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".view.MainFragment">
 
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -62,14 +69,8 @@
                 app:tabTextColor="#d6dbdf" />
 
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tabLayout"
-                android:layout_marginTop="-5dp" />
-
         </RelativeLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <View

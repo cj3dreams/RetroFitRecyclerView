@@ -1,11 +1,14 @@
 package com.pseudoencom.retrofitrecyclerview.vm
 
+import android.content.Context
 import android.provider.ContactsContract
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
@@ -21,7 +24,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
 
     var mutableLiveData: MutableLiveData<List<Article>> = MutableLiveData()
 
-    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView){
+    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View){
         val response = repository.getAllData()
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
@@ -29,11 +32,11 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                     mutableLiveData.postValue(response.body()!!.articles)
                     recyclerView.visibility = View.VISIBLE
                     shimmerFrameLayout.stopShimmer()
-
                 }
             }
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
-
+                val snackbar: Snackbar = Snackbar.make(view, "Network Error \n $t", 3000)
+                snackbar.show()
                 }
         })
     }

@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.tabs.TabLayout
@@ -18,6 +22,7 @@ import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
+import com.pseudoencom.retrofitrecyclerview.adapter.ViewPagerAdapter
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
 import com.pseudoencom.retrofitrecyclerview.model.Source
@@ -35,9 +40,7 @@ class MainFragment : Fragment(), View.OnClickListener {
     private val retrofitService = ApiInterface.create()
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager2: ViewPager2
-
-
+    private lateinit var viewPager: ViewPager
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,13 +56,15 @@ class MainFragment : Fragment(), View.OnClickListener {
         recyclerView = view.findViewById(R.id.rrView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         shimmerFrameLayout = view.findViewById(R.id.shimmer)
-        viewPager2 = view.findViewById(R.id.vp2)
-        tabLayout = view.findViewById(R.id.tabLayout)
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.mainHome))
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.mainHome))
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.mainHome))
+        val fm:FragmentManager = requireActivity().supportFragmentManager
+        val fragmentAdapter = ViewPagerAdapter(fm)
+        viewPager = view.findViewById(R.id.vp2)
+        viewPager.adapter = fragmentAdapter
+
+        tabLayout = view.findViewById(R.id.tabLayout)
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+        tabLayout.setupWithViewPager(viewPager)
 
         return view
     }
@@ -71,7 +76,7 @@ class MainFragment : Fragment(), View.OnClickListener {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this)
             recyclerView.adapter = adapter
         })
-        viewModel.sayHello(shimmerFrameLayout, recyclerView)
+        viewModel.sayHello(shimmerFrameLayout, recyclerView, view)
     }
 
     override fun onClick(v: View?) {

@@ -1,5 +1,6 @@
 package com.pseudoencom.retrofitrecyclerview.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
@@ -18,7 +19,7 @@ import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
 import com.pseudoencom.retrofitrecyclerview.view.MainFragment
 
-class MainRecyclerViewAdapter(val context: Context, val myDataSet:List<Article>, val onClickListener: View.OnClickListener)
+class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>, val onClickListener: View.OnClickListener)
     : RecyclerView.Adapter<MainRecyclerViewAdapter.MyViewHolder>() {
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -58,13 +59,13 @@ class MainRecyclerViewAdapter(val context: Context, val myDataSet:List<Article>,
         shimmerDrawable.setShimmer(shimmer)
 
 
-        val itemData = myDataSet.get(position)
+        val itemData = myDataSet[position]
         holder.nameOfNews.text = itemData.title
         holder.descrip.text = itemData.description.trim().replace("\n","")
         holder.brandName.text = itemData.source.name
         holder.timeRelease.text =  itemData.publishedAt.substring(0,10)
 
-        loadImage(context,holder.imageViewOfNews, itemData.urlToImage, itemData.urlToImage)
+        loadImage(context,holder.imageViewOfNews, itemData.urlToImage)
         try {
             holder.itemView.tag = itemData
             holder.itemView.setOnClickListener(onClickListener)
@@ -80,14 +81,20 @@ class MainRecyclerViewAdapter(val context: Context, val myDataSet:List<Article>,
     }
 
     fun loadImage(
-        activity: Context?, ivUser: ImageView, thumbnailImage: String?,
+        activity: Context?, ivUser: ImageView,
         originalImage: String?
     ) {
 
         activity?.let {
             Glide.with(it).load(originalImage)
-                .thumbnail(Glide.with(activity).load(thumbnailImage))
+                .thumbnail(Glide.with(activity).load(originalImage))
                 .into(ivUser)
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        fun setList(list: List<Article>){
+            myDataSet = list
+            notifyDataSetChanged()
         }
     }
 }

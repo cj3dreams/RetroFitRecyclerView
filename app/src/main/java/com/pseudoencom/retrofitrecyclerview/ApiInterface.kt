@@ -21,9 +21,9 @@ interface ApiInterface {
         fun create() : ApiInterface {
 
             val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(0.5.toLong(), TimeUnit.SECONDS)
+                .readTimeout(9, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
                 .build()
 
 

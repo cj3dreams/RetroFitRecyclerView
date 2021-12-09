@@ -55,9 +55,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val fragmentAdapter = ViewPagerAdapter(fm,list)
         viewPager = view.findViewById(R.id.vp2)
         viewPager.adapter = fragmentAdapter
-
         tabLayout = view.findViewById(R.id.tabLayout)
-        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
         tabLayout.setupWithViewPager(viewPager)
 
         return view

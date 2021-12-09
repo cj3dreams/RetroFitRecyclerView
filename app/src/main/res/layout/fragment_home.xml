@@ -9,10 +9,13 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_alignParentTop="true"
+        app:tabIndicatorColor="#121212"
+        android:background="@color/white"
         app:tabSelectedTextColor="#121212"
-        app:tabTextColor="#d6dbdf" />
+        app:tabTextColor="#d6dbdf"
+        app:tabIndicatorAnimationMode="elastic"/>
     <View
         android:id="@+id/shadow_view2"
         android:layout_width="match_parent"

@@ -10,6 +10,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        app:tabMode="scrollable"
         android:layout_alignParentTop="true"
         app:tabIndicatorColor="#121212"
         android:background="@color/white"

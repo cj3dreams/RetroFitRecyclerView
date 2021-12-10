@@ -6,24 +6,28 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import okhttp3.OkHttpClient
+import retrofit2.Response
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 
 interface ApiInterface {
 
-    @GET("v2/everything?q=Apple&from=2021-12-07&sortBy=popularity&apiKey=a084e3b0ef354daf9d4faf00c8ee662e")
-    fun getData() : Call<DataNewsModelClass>
+    @GET("everything")
+    fun getNews(@Query("q") code: String, @Query("from") date:String,
+                @Query("sortBy") sortBy: String,@Query("apiKey") apiKey: String) : Call<DataNewsModelClass>
 
     companion object {
 
-        var BASE_URL = "https://newsapi.org/"
+        var BASE_URL = "https://newsapi.org/v2/"
 
         fun create() : ApiInterface {
 
             val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(0.5.toLong(), TimeUnit.SECONDS)
-                .readTimeout(9, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
                 .build()
 
 

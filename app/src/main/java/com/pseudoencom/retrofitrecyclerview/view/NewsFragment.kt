@@ -7,30 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.tabs.TabLayout
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
-import com.pseudoencom.retrofitrecyclerview.adapter.ViewPagerAdapter
-import com.pseudoencom.retrofitrecyclerview.model.Article
-import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
-import com.pseudoencom.retrofitrecyclerview.model.Source
+import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class NewsFragment : Fragment(), View.OnClickListener {
 
@@ -39,6 +27,8 @@ class NewsFragment : Fragment(), View.OnClickListener {
     private lateinit var adapter: MainRecyclerViewAdapter
     private val retrofitService = ApiInterface.create()
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+
+    var receiveNewsModel: NewsModel = NewsModel("0","0","0")
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,10 +55,18 @@ class NewsFragment : Fragment(), View.OnClickListener {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this)
             recyclerView.adapter = adapter
         })
-        viewModel.sayHello(shimmerFrameLayout, recyclerView, view)
+        viewModel.sayHello(shimmerFrameLayout, recyclerView, view, receiveNewsModel)
     }
 
     override fun onClick(v: View?) {
         Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        fun newInstance(newsModel: NewsModel): NewsFragment {
+            val fragment = NewsFragment()
+            fragment.receiveNewsModel = newsModel
+            return fragment
+        }
     }
 }

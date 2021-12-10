@@ -25,12 +25,14 @@ import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
 import com.pseudoencom.retrofitrecyclerview.adapter.ViewPagerAdapter
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
+import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.model.Source
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.reflect.Array.newInstance
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -50,7 +52,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home,container,false)
-        var list = listOf("hello", "hello", "hello", "hello")
+        var list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","All","2021-12-08"))
+        list.add(NewsModel("Apple","Apple","2021-12-08"))
+        list.add(NewsModel("Google","Google","2021-12-08"))
+        list.add(NewsModel("Microsoft","Microsoft","2021-12-08"))
+        list.add(NewsModel("Jetbrains","Jetbrains","2021-12-08"))
+        list.add(NewsModel("Facebook","Facebook","2021-12-08"))
         val fm:FragmentManager = requireActivity().supportFragmentManager
         val fragmentAdapter = ViewPagerAdapter(fm,list)
         viewPager = view.findViewById(R.id.vp2)
@@ -68,4 +75,5 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
     }
+
 }

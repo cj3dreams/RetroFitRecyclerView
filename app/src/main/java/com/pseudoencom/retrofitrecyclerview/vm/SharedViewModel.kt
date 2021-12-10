@@ -13,6 +13,7 @@ import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
+import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,8 +24,8 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
 
     var mutableLiveData: MutableLiveData<List<Article>> = MutableLiveData()
 
-    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View){
-        val response = repository.getAllData()
+    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View, receiveNewsModel: NewsModel){
+        val response = repository.getAllData(receiveNewsModel)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
                 if (response != null) {
@@ -34,7 +35,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                 }
             }
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
-                val snackbar: Snackbar = Snackbar.make(view, "Network Error \n $t", 3000)
+                val snackbar: Snackbar = Snackbar.make(view, "Network Error $t", 3000)
                 snackbar.show()
                 shimmerFrameLayout.stopShimmer()
                 shimmerFrameLayout.setBackgroundColor(Color.parseColor("#FFFFFF"))

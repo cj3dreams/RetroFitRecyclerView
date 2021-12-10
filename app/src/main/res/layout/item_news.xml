@@ -63,8 +63,7 @@
             android:background="#FFF1D8A0"
             android:elevation="10dp"
             android:gravity="center"
-            android:maxWidth="130dp"
-            android:minWidth="80dp"
+
             android:text="Coca Cola"
             android:textStyle="bold" />
 

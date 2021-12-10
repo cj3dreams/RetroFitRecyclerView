@@ -60,7 +60,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
         val itemData = myDataSet[position]
         holder.nameOfNews.text = itemData.title
         holder.descrip.text = itemData.description.trim().replace("\n","")
-        holder.brandName.text = itemData.source.name
+        holder.brandName.text = " " + itemData.source.name + " "
         holder.timeRelease.text =  itemData.publishedAt.substring(0,10)
 
         loadImage(context,holder.imageViewOfNews, itemData.urlToImage)

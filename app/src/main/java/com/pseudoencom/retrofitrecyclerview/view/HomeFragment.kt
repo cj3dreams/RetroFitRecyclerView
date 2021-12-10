@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -54,6 +55,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home,container,false)
         var list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","All","2021-12-08"))
         list.add(NewsModel("Apple","Apple","2021-12-08"))
+        list.add(NewsModel("Amazon","Amazon","2021-12-08"))
         list.add(NewsModel("Google","Google","2021-12-08"))
         list.add(NewsModel("Microsoft","Microsoft","2021-12-08"))
         list.add(NewsModel("Jetbrains","Jetbrains","2021-12-08"))

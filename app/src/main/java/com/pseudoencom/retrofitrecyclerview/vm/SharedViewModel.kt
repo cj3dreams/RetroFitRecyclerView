@@ -30,6 +30,9 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     var listForSeacrh: List<Article> = listOf()
     var search: MutableLiveData<List<Article>> = MutableLiveData()
 
+    fun detailF() = mutableLiveData
+
+
     fun giveList(e:List<Article>) {
         listForSeacrh = e
     }
@@ -41,7 +44,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View, receiveNewsModel: NewsModel, s: SwipeRefreshLayout, oops:ImageView){
         shimmerFrameLayout.visibility = View.VISIBLE
         oops.visibility = View.INVISIBLE
-        s.isRefreshing = true
+
         val response = repository.getAllData(receiveNewsModel)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {

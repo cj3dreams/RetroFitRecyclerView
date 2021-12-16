@@ -13,21 +13,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
-import com.pseudoencom.retrofitrecyclerview.view.HomeFragment
-import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
-import com.pseudoencom.retrofitrecyclerview.view.ReadLaterFragment
+import com.pseudoencom.retrofitrecyclerview.view.*
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var fragment: Fragment
     private lateinit var search: SearchView
 //    private lateinit var viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
 //        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 //            override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -49,14 +47,19 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.mainHome -> fragment = HomeFragment()
-            R.id.readLater -> fragment = ReadLaterFragment()
+        when (item.itemId) {
+            R.id.mainHome -> changerOfFrg(HomeFragment())
+            R.id.readLater -> changerOfFrg(ReadLaterFragment())
+            R.id.favorites -> changerOfFrg(FavoritiesFragment())
+            R.id.profile -> changerOfFrg(ProfileFragment())
         }
+        return true
+    }
+
+    private fun changerOfFrg(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.frgChanger, fragment)
                 .commit()
         }
-        return true
     }
 }

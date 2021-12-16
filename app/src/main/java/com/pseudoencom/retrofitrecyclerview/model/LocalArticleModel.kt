@@ -1,8 +1,6 @@
 package com.pseudoencom.retrofitrecyclerview.model
 
-import androidx.room.PrimaryKey
-
-data class Article(
+class LocalArticleModel(
     val author: Any,
     val content: String,
     val description: String,
@@ -11,4 +9,6 @@ data class Article(
     val title: String,
     val url: String,
     val urlToImage: String,
+    var isReadLater: Boolean = false,
+    var isFavorite: Boolean = false,
 )

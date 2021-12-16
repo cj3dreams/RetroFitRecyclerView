@@ -28,12 +28,13 @@ class NewsFragment : Fragment(), View.OnClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
-    private val retrofitService = ApiInterface.create()
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
+    var sayPositionFrag: Long = 0
 
+    private val retrofitService = ApiInterface.create()
     var forSearch: List<Article> = listOf()
 
     override fun onAttach(context: Context) {
@@ -77,7 +78,15 @@ class NewsFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Clicked", Toast.LENGTH_SHORT).show()
+        val itemView = v?.tag as Int
+        val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+//            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
+            replace(R.id.frgChanger, DetailFragment)
+            addToBackStack("Back")
+                .commit()
+        }
     }
 
     companion object {

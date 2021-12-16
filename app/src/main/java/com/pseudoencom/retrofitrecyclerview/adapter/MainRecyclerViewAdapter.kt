@@ -21,7 +21,6 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
     : RecyclerView.Adapter<MainRecyclerViewAdapter.MyViewHolder>() {
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var id: Int = 0
         var imageViewOfNews: ImageView
         var nameOfNews: TextView
         var descrip: TextView
@@ -45,6 +44,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
         val shimmer = Shimmer.ColorHighlightBuilder()
             .setBaseColor(Color.parseColor("#CFCFCF"))
             .setBaseAlpha(1F)
@@ -61,11 +61,10 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
         holder.nameOfNews.text = itemData.title
         holder.descrip.text = itemData.description.trim().replace("\n","")
         holder.brandName.text = " " + itemData.source.name + " "
-        holder.timeRelease.text =  itemData.publishedAt.substring(0,10)
-
+        holder.timeRelease.text = " " +   itemData.publishedAt.substring(0,10) + " "
         loadImage(context,holder.imageViewOfNews, itemData.urlToImage)
         try {
-            holder.itemView.tag = itemData
+            holder.itemView.tag = position
             holder.itemView.setOnClickListener(onClickListener)
         } catch (ex: Exception) {
             ex.message?.let {
@@ -89,10 +88,5 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
                 .into(ivUser)
         }
 
-        @SuppressLint("NotifyDataSetChanged")
-        fun setList(list: List<Article>){
-            myDataSet = list
-            notifyDataSetChanged()
-        }
     }
 }

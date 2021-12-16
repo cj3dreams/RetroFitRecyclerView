@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -49,8 +48,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/botNav"
         android:layout_below="@id/toolbar"/>
-
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/botNav"

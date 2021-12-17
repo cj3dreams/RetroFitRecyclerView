@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.tabs.TabLayout
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
+import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
@@ -66,6 +67,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         viewPager.adapter = fragmentAdapter
         tabLayout = view.findViewById(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
+
 
         return view
     }

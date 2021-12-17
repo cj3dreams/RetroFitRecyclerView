@@ -41,13 +41,20 @@
                 android:layout_marginRight="15dp" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
+    <View
+        android:id="@+id/shadow_view3"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone"
+        android:background="@drawable/shadow2" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frgChanger"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/botNav"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/botNav"

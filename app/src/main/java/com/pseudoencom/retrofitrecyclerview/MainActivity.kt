@@ -1,9 +1,11 @@
 package com.pseudoencom.retrofitrecyclerview
 
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
@@ -13,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
+import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.view.*
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
@@ -20,11 +23,14 @@ import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var search: SearchView
+    private lateinit var view3: View
+    var isTrue = false
 //    private lateinit var viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
 
 //        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -44,6 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         bottomNavigationView = findViewById(R.id.botNav)
         bottomNavigationView.setOnItemSelectedListener(this)
         bottomNavigationView.selectedItemId = R.id.mainHome
+        view3 = findViewById(R.id.shadow_view3)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -60,6 +67,14 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.frgChanger, fragment)
                 .commit()
+        }
+    }
+
+    fun showShadow(isVisible: Boolean) {
+        if (isVisible) {
+            view3.visibility = View.VISIBLE
+        } else {
+            view3.visibility == View.INVISIBLE
         }
     }
 }

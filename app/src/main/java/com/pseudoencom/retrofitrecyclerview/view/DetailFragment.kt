@@ -2,6 +2,7 @@ package com.pseudoencom.retrofitrecyclerview.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
+import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.model.Article
@@ -25,9 +27,9 @@ class DetailFragment : Fragment() {
     private lateinit var imageView: ImageView
     private lateinit var viewModel: SharedViewModel
 
+
     private val retrofitService = ApiInterface.create()
     private lateinit var idFrom: Article
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,6 +55,8 @@ class DetailFragment : Fragment() {
                 idFrom.publishedAt  + "\n" +
                 idFrom.source  + "\n" + idFrom.url
                 loadImage(context,imageView, idFrom.urlToImage)
+
+
     }
 
     fun loadImage(

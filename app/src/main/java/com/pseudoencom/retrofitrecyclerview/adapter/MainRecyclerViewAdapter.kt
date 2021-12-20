@@ -17,7 +17,7 @@ import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
 
-class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>, val onClickListener: View.OnClickListener)
+class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>, val onClickListener: View.OnClickListener, val onLongClickListener: View.OnLongClickListener)
     : RecyclerView.Adapter<MainRecyclerViewAdapter.MyViewHolder>() {
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -66,6 +66,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
         try {
             holder.itemView.tag = position
             holder.itemView.setOnClickListener(onClickListener)
+            holder.itemView.setOnLongClickListener(onLongClickListener)
         } catch (ex: Exception) {
             ex.message?.let {
                 Log.e(NewsFragment::class.java.simpleName, it)

@@ -19,10 +19,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.tabs.TabLayout
-import com.pseudoencom.retrofitrecyclerview.ApiInterface
-import com.pseudoencom.retrofitrecyclerview.MainActivity
-import com.pseudoencom.retrofitrecyclerview.MainRepository
-import com.pseudoencom.retrofitrecyclerview.R
+import com.pseudoencom.retrofitrecyclerview.*
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
 import com.pseudoencom.retrofitrecyclerview.adapter.ViewPagerAdapter
 import com.pseudoencom.retrofitrecyclerview.model.Article
@@ -36,7 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Array.newInstance
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
 
     private lateinit var viewModel: SharedViewModel
     private val retrofitService = ApiInterface.create()
@@ -54,15 +51,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home,container,false)
-        var list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","All","2021-12-08"))
-        list.add(NewsModel("Apple","Apple","2021-12-08"))
-        list.add(NewsModel("Amazon","Amazon","2021-12-08"))
-        list.add(NewsModel("Google","Google","2021-12-08"))
-        list.add(NewsModel("Microsoft","Microsoft","2021-12-08"))
-        list.add(NewsModel("Jetbrains","Jetbrains","2021-12-08"))
-        list.add(NewsModel("Facebook","Facebook","2021-12-08"))
-        val fm:FragmentManager = requireActivity().supportFragmentManager
-        val fragmentAdapter = ViewPagerAdapter(fm,list)
+        val list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","All","2021-12-18"))
+        list.add(NewsModel("Apple","Apple","2021-12-18"))
+        list.add(NewsModel("Amazon","Amazon","2021-12-18"))
+        list.add(NewsModel("Google","Google","2021-12-18"))
+        list.add(NewsModel("Microsoft","Microsoft","2021-12-18"))
+        list.add(NewsModel("Jetbrains","Jetbrains","2021-12-18"))
+        list.add(NewsModel("Facebook","Facebook","2021-12-18"))
+        val fragmentAdapter = ViewPagerAdapter(childFragmentManager,list)
         viewPager = view.findViewById(R.id.vp2)
         viewPager.adapter = fragmentAdapter
         tabLayout = view.findViewById(R.id.tabLayout)
@@ -78,6 +74,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun OnSearch(text: String) {
+
     }
 
 }

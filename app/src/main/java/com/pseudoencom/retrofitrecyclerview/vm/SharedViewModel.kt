@@ -27,8 +27,18 @@ import java.util.logging.Handler
 class SharedViewModel constructor(private val repository: MainRepository)  : ViewModel() {
 
     var mutableLiveData: MutableLiveData<List<Article>> = MutableLiveData()
+    var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
+    var readLaterData: MutableLiveData<List<Article>> = MutableLiveData()
     var listForSeacrh: List<Article> = listOf()
+    var listForFavorites: MutableList<Article> = mutableListOf()
     var search: MutableLiveData<List<Article>> = MutableLiveData()
+
+
+    fun addFavoritesList(article: Article){
+        listForFavorites.add(article)
+    }
+    fun getFavorites() = favoritesData
+    fun fetchFavorites() = getFavorites().postValue(listForFavorites)
 
     fun detailF() = mutableLiveData
 
@@ -68,7 +78,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
         })
     }
     fun searchNews(search: String): List<Article> {
-        val recipes: ArrayList<Article> = ArrayList()
+        val news: ArrayList<Article> = ArrayList()
         for (item in this.listForSeacrh) {
             if ((item.title.contains(search.capitalize()) || item.title.contains(search) || item.title.contains(
                     search.toLowerCase()
@@ -76,7 +86,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                     search
                 )
             )
-                recipes.add(
+                news.add(
                     Article(
                         item.author,
                         item.content,
@@ -89,6 +99,6 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                     )
                 )
         }
-        return recipes
+        return news
     }
 }

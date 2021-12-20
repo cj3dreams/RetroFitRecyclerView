@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     private lateinit var search: SearchView
     private lateinit var view3: View
     var isTrue = false
+    var onSearchListener: OnSearchListener? = null
 //    private lateinit var viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

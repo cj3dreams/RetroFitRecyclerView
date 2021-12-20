@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RetroFitRecyclerView</string>
+    <string name="app_name">IT News</string>
     <string name="hello_blank_fragment">go home vasya, you are too drunk</string>
     <string name="mainHome">Home</string>
     <string name="readLater">Read later</string>

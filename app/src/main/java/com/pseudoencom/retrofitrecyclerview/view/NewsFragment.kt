@@ -1,6 +1,7 @@
 package com.pseudoencom.retrofitrecyclerview.view
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +25,7 @@ import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
-class NewsFragment : Fragment(), View.OnClickListener {
+class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
@@ -33,6 +35,7 @@ class NewsFragment : Fragment(), View.OnClickListener {
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
     var sayPositionFrag: Long = 0
+
 
     private val retrofitService = ApiInterface.create()
     var forSearch: List<Article> = listOf()
@@ -69,7 +72,7 @@ class NewsFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
-            adapter = MainRecyclerViewAdapter(requireContext(), it, this)
+            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
             forSearch = it
         })
@@ -78,13 +81,12 @@ class NewsFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        Toast.makeText(requireContext(), "Clicked", Toast.LENGTH_SHORT).show()
         val itemView = v?.tag as Int
         val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
-//            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
+            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
                 .commit()
         }
     }
@@ -95,5 +97,44 @@ class NewsFragment : Fragment(), View.OnClickListener {
             fragment.receiveNewsModel = newsModel
             return fragment
         }
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        basicAlert(v!!)
+        return true
+    }
+    fun basicAlert(view: View){
+        val positiveButtonClick = { dialog: DialogInterface, which: Int ->
+            Toast.makeText(requireContext(),
+                "Added to Read Later", Toast.LENGTH_SHORT).show()
+        }
+        val negativeButtonClick = { dialog: DialogInterface, which: Int ->
+            val itemView = view?.tag as Int
+            viewModel.addFavoritesList(forSearch[itemView])
+            Toast.makeText(
+                requireContext(),
+                "Added to Favorites", Toast.LENGTH_SHORT
+            ).show()
+        }
+        val neutralButtonClick = { dialog: DialogInterface, which: Int ->
+            Toast.makeText(
+                requireContext(),
+                "Cancelled", Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        val builder = AlertDialog.Builder(requireContext())
+
+        with(builder)
+        {
+            setTitle("Add to Favorites/Read Later")
+            setMessage("Choose which one, add to:")
+            setPositiveButton("Read Later", DialogInterface.OnClickListener(function = positiveButtonClick))
+            setNegativeButton("Favorites", negativeButtonClick)
+            setNeutralButton("Cancel", neutralButtonClick)
+            show()
+        }
+
+
     }
 }

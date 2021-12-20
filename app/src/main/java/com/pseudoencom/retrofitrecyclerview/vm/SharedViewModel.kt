@@ -28,12 +28,25 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
 
     var mutableLiveData: MutableLiveData<List<Article>> = MutableLiveData()
     var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var readLaterData: MutableLiveData<List<Article>> = MutableLiveData()
+    var readLaterData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var listForSeacrh: List<Article> = listOf()
     var listForFavorites: MutableList<Article> = mutableListOf()
+    var listForReadLater: MutableList<Article> = mutableListOf()
     var search: MutableLiveData<List<Article>> = MutableLiveData()
 
+    fun removeFromReadLaterList(article: Article){
+        listForReadLater.remove(article)
+    }
+    fun addReadLaterList(article: Article){
+        listForReadLater.add(article)
+    }
+    fun getReadLater() = readLaterData
+    fun fetchReadLater() = getReadLater().postValue(listForReadLater)
 
+
+    fun removeFromFavoritesList(article: Article){
+        listForFavorites.remove(article)
+    }
     fun addFavoritesList(article: Article){
         listForFavorites.add(article)
     }

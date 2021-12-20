@@ -29,6 +29,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
+    private lateinit var viewModel2: SharedViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var receiveNewsModel: NewsModel
@@ -43,6 +44,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
+        viewModel2 = ViewModelProvider(requireActivity(), MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -105,12 +107,14 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
+            val itemView = view?.tag as Int
+            viewModel2.addReadLaterList(forSearch[itemView])
             Toast.makeText(requireContext(),
                 "Added to Read Later", Toast.LENGTH_SHORT).show()
         }
         val negativeButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel.addFavoritesList(forSearch[itemView])
+            viewModel2.addFavoritesList(forSearch[itemView])
             Toast.makeText(
                 requireContext(),
                 "Added to Favorites", Toast.LENGTH_SHORT

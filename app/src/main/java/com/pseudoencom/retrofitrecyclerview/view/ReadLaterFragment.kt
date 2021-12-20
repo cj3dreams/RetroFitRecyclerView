@@ -1,13 +1,16 @@
 package com.pseudoencom.retrofitrecyclerview.view
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,16 +26,14 @@ import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
-class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickListener {
+class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
-    private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
-    var sayPositionFrag: Long = 0
 
 
     private val retrofitService = ApiInterface.create()
@@ -40,7 +41,8 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
+
     }
 
     override fun onCreateView(
@@ -48,36 +50,27 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_favorities,container,false)
-        recyclerView = view.findViewById(R.id.rrViewF)
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_read_later,container,false)
+        recyclerView = view.findViewById(R.id.rrViewR)
+        recyclerView.visibility = View.VISIBLE
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        oops = view.findViewById(R.id.oopsF)
-        shimmerFrameLayout = view.findViewById(R.id.shimmerF)
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layoutF)
-
-        receiveNewsModel = NewsModel("Apple","Apple","2021-12-18")
-
-        swipeRefreshLayout.setOnRefreshListener{
-            viewModel.sayHello(shimmerFrameLayout, recyclerView, view, receiveNewsModel, swipeRefreshLayout, oops)
-        }
-        swipeRefreshLayout.setColorSchemeResources(
-            R.color.purple_200,
-            R.color.purple_500,
-            R.color.purple_700,
-            R.color.teal_700)
-
+        oops = view.findViewById(R.id.oopsR)
+        shimmerFrameLayout = view.findViewById(R.id.shimmerR)
+        shimmerFrameLayout.visibility = View.GONE
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layoutR)
+        swipeRefreshLayout.setOnRefreshListener (this)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.getReadLater().observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
             forSearch = it
         })
-        viewModel.sayHello(shimmerFrameLayout, recyclerView, view, receiveNewsModel,swipeRefreshLayout, oops)
+        viewModel.fetchReadLater()
         viewModel.giveList(forSearch)
     }
 
@@ -85,14 +78,53 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         val itemView = v?.tag as Int
         val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
-//            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
+            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
                 .commit()
         }
     }
     override fun onLongClick(v: View?): Boolean {
-        Toast.makeText(requireContext(),"LongClick",Toast.LENGTH_SHORT).show()
+        basicAlert(v!!)
         return true
+    }
+    fun basicAlert(view: View){
+        val positiveButtonClick = { dialog: DialogInterface, which: Int ->
+            val itemView = view?.tag as Int
+            viewModel.removeFromReadLaterList(forSearch[itemView])
+            Handler().postDelayed({
+                swipeRefreshLayout.post {
+                    onRefresh()
+                    swipeRefreshLayout.isRefreshing = true }
+            },500)
+            Toast.makeText(requireContext(),
+                "Deleted", Toast.LENGTH_SHORT).show()
+        }
+        val negativeButtonClick = { dialog: DialogInterface, which: Int ->
+            Toast.makeText(
+                requireContext(),
+                "Cancelled", Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        val builder = AlertDialog.Builder(requireContext())
+
+        with(builder)
+        {
+            setTitle("Delete Read Later Element")
+            setMessage("Are you sure?")
+            setPositiveButton("Delete", DialogInterface.OnClickListener(function = positiveButtonClick))
+            setNegativeButton("Cancel", negativeButtonClick)
+            show()
+        }
+
+
+    }
+
+    override fun onRefresh() {
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.frgChanger, ReadLaterFragment())
+            commit()
+        }
     }
 }

@@ -10,7 +10,7 @@
         android:id="@+id/oopsR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/something_went_wrong"
+        android:src="@drawable/add_items"
         android:layout_centerInParent="true"
         android:visibility="gone"
         android:padding="50dp"/>

@@ -33,7 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Array.newInstance
 
-class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
+class HomeFragment : Fragment(), View.OnClickListener{
 
     private lateinit var viewModel: SharedViewModel
     private val retrofitService = ApiInterface.create()
@@ -74,10 +74,6 @@ class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
 
     override fun onClick(v: View?) {
         Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun OnSearch(text: String) {
-
     }
 
 }

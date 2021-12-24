@@ -14,17 +14,7 @@
         android:layout_centerInParent="true"
         android:visibility="gone"
         android:padding="50dp"/>
-<!--    <AutoCompleteTextView-->
-<!--        android:id="@+id/checkA"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:completionThreshold="1"-->
-<!--        android:drawableStart="@android:drawable/ic_menu_search"-->
-<!--        android:hint="Поиск"-->
-<!--        android:inputType="textShortMessage"-->
-<!--        android:textColorHighlight="#191818"-->
-<!--        android:textColorLink="#101010" />-->
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"

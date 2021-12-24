@@ -16,6 +16,7 @@ import com.facebook.shimmer.ShimmerDrawable
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
+import kotlin.math.sqrt
 
 class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>, val onClickListener: View.OnClickListener, val onLongClickListener: View.OnLongClickListener)
     : RecyclerView.Adapter<MainRecyclerViewAdapter.MyViewHolder>() {
@@ -39,7 +40,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
             : MyViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_news, null)
+        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_news,parent, false)
         return MyViewHolder(view)
     }
 
@@ -55,7 +56,6 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
 
         val shimmerDrawable = ShimmerDrawable()
         shimmerDrawable.setShimmer(shimmer)
-
 
         val itemData = myDataSet[position]
         holder.nameOfNews.text = itemData.title

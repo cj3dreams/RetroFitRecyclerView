@@ -1,10 +1,12 @@
 package com.pseudoencom.retrofitrecyclerview.vm
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +15,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
-import com.pseudoencom.retrofitrecyclerview.model.Article
-import com.pseudoencom.retrofitrecyclerview.model.DataNewsModelClass
-import com.pseudoencom.retrofitrecyclerview.model.NewsModel
-import com.pseudoencom.retrofitrecyclerview.model.Source
+import com.pseudoencom.retrofitrecyclerview.model.*
 import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,13 +25,17 @@ import java.util.logging.Handler
 
 class SharedViewModel constructor(private val repository: MainRepository)  : ViewModel() {
 
-    var mutableLiveData: MutableLiveData<List<Article>> = MutableLiveData()
+    var mutableLiveData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var readLaterData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var listForSeacrh: List<Article> = listOf()
+    var search: MutableLiveData<MutableList<Article>> = MutableLiveData()
+    var mProfile: MutableLiveData<ArrayList<ProfileModel>> = MutableLiveData()
+
+    var listForSeacrh: MutableList<Article> = mutableListOf()
     var listForFavorites: MutableList<Article> = mutableListOf()
     var listForReadLater: MutableList<Article> = mutableListOf()
-    var search: MutableLiveData<List<Article>> = MutableLiveData()
+    var listOfProfile: ArrayList<ProfileModel> = arrayListOf()
+
 
     fun removeFromReadLaterList(article: Article){
         listForReadLater.remove(article)
@@ -53,10 +56,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     fun getFavorites() = favoritesData
     fun fetchFavorites() = getFavorites().postValue(listForFavorites)
 
-    fun detailF() = mutableLiveData
-
-
-    fun giveList(e:List<Article>) {
+    fun giveList(e:MutableList<Article>) {
         listForSeacrh = e
     }
     fun nowSearch() = search
@@ -64,7 +64,12 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
         search.value = searchNews(text)
     }
 
-    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View, receiveNewsModel: NewsModel, s: SwipeRefreshLayout, oops:ImageView){
+    fun mPFragment() = mProfile
+    fun fetchMPF() {
+        mProfile.value = listOfProfile
+    }
+
+    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View?, receiveNewsModel: NewsModel, s: SwipeRefreshLayout, oops:ImageView){
         shimmerFrameLayout.visibility = View.VISIBLE
         oops.visibility = View.INVISIBLE
 
@@ -80,18 +85,19 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                 }
             }
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
-                val snackBar: Snackbar = Snackbar.make(view, "Network Error: $t", 2500)
-                snackBar.show()
-                s.isRefreshing = false
-                shimmerFrameLayout.stopShimmer()
-                shimmerFrameLayout.visibility = View.INVISIBLE
-                oops.visibility = View.VISIBLE
-
+                if (view!=null) {
+                    val snackBar: Snackbar = Snackbar.make(view, "Network Error: $t", 2500)
+                    snackBar.show()
+                    s.isRefreshing = false
+                    shimmerFrameLayout.stopShimmer()
+                    shimmerFrameLayout.visibility = View.INVISIBLE
+                    oops.visibility = View.VISIBLE
+                }
             }
         })
     }
-    fun searchNews(search: String): List<Article> {
-        val news: ArrayList<Article> = ArrayList()
+    fun searchNews(search: String): MutableList<Article> {
+        val listForSeacrh: MutableList<Article> = mutableListOf()
         for (item in this.listForSeacrh) {
             if ((item.title.contains(search.capitalize()) || item.title.contains(search) || item.title.contains(
                     search.toLowerCase()
@@ -99,7 +105,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                     search
                 )
             )
-                news.add(
+                listForSeacrh.add(
                     Article(
                         item.author,
                         item.content,
@@ -112,6 +118,16 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                     )
                 )
         }
-        return news
+        return listForSeacrh
+    }
+    fun getProfile(): ArrayList<ProfileModel> {
+        val listOfProfile: ArrayList<ProfileModel> = ArrayList()
+        listOfProfile.add(ProfileModel(1, R.drawable.ic_favorities, "Настройки"))
+        listOfProfile.add(ProfileModel(2, R.drawable.ic_favorities, "Категория"))
+        listOfProfile.add(ProfileModel(3, R.drawable.ic_favorities, "Мои кошелки"))
+        listOfProfile.add(ProfileModel(4, R.drawable.ic_favorities, "Долги"))
+        listOfProfile.add(ProfileModel(5, R.drawable.ic_favorities, "Помощь и Поддержка"))
+        this.listOfProfile = listOfProfile
+        return listOfProfile
     }
 }

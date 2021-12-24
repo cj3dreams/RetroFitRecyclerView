@@ -37,7 +37,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
 
 
     private val retrofitService = ApiInterface.create()
-    var forSearch: List<Article> = listOf()
+    var forSearch: MutableList<Article> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,6 +59,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         shimmerFrameLayout.visibility = View.GONE
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layoutR)
         swipeRefreshLayout.setOnRefreshListener (this)
+        oops = view.findViewById(R.id.oopsR)
         return view
     }
 
@@ -69,9 +70,19 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
             forSearch = it
+
+            if (adapter.itemCount == 0){
+                recyclerView.visibility = View.GONE
+                oops.visibility = View.VISIBLE
+
+            }else{
+                recyclerView.visibility = View.VISIBLE
+                oops.visibility = View.GONE
+            }
         })
         viewModel.fetchReadLater()
         viewModel.giveList(forSearch)
+
     }
 
     override fun onClick(v: View?) {

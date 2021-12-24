@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
@@ -35,11 +36,11 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
-    var sayPositionFrag: Long = 0
+    var searchStringFromAct = ""
 
 
     private val retrofitService = ApiInterface.create()
-    var forSearch: List<Article> = listOf()
+    var forSearch: MutableList<Article> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -72,6 +73,15 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (searchStringFromAct != ""){
+        viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
+            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+            recyclerView.adapter = adapter
+            forSearch = it
+        })
+        viewModel.fetchSearch(searchStringFromAct)
+        viewModel.giveList(forSearch)
+        }
 
         viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
@@ -97,6 +107,12 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         fun newInstance(newsModel: NewsModel): NewsFragment {
             val fragment = NewsFragment()
             fragment.receiveNewsModel = newsModel
+            return fragment
+
+        }
+        fun newSearch(text: String): NewsFragment {
+            val fragment = NewsFragment()
+            fragment.searchStringFromAct = text
             return fragment
         }
     }
@@ -138,7 +154,5 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             setNeutralButton("Cancel", neutralButtonClick)
             show()
         }
-
-
     }
 }

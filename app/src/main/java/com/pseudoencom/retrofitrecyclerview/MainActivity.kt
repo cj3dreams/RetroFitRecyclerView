@@ -20,12 +20,11 @@ import com.pseudoencom.retrofitrecyclerview.view.*
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
-class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener,OnSearchListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var search: SearchView
     private lateinit var view3: View
     var isTrue = false
-    var onSearchListener: OnSearchListener? = null
 //    private lateinit var viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,21 +32,27 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         setContentView(R.layout.activity_main)
 
 
-
-//        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(p0: String?): Boolean {
-//
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(p0: String?): Boolean {
-//                println("hello")
-//                return false
-//            }
-//
-//
-//        })
         search = findViewById(R.id.searchView)
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                    onSearch(p0!!)
+
+
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+
+                    onSearch(p0!!)
+
+                return false
+            }
+
+
+        })
+
         bottomNavigationView = findViewById(R.id.botNav)
         bottomNavigationView.setOnItemSelectedListener(this)
         bottomNavigationView.selectedItemId = R.id.mainHome
@@ -77,5 +82,9 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         } else {
             view3.visibility == View.INVISIBLE
         }
+    }
+
+    override fun onSearch(text: String) {
+        NewsFragment.newSearch(text)
     }
 }

@@ -1,5 +1,5 @@
 package com.pseudoencom.retrofitrecyclerview
 
 interface OnSearchListener {
-    fun OnSearch(text: String)
+    fun onSearch(text: String)
 }

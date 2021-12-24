@@ -20,33 +20,27 @@ import com.pseudoencom.retrofitrecyclerview.view.*
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
-class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener,OnSearchListener {
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var search: SearchView
     private lateinit var view3: View
+    private var listener:OnSearchListener? = null
     var isTrue = false
 //    private lateinit var viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         search = findViewById(R.id.searchView)
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(p0: String?): Boolean {
-
                     onSearch(p0!!)
-
-
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-
                     onSearch(p0!!)
-
                 return false
             }
 
@@ -61,7 +55,11 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.mainHome -> changerOfFrg(HomeFragment())
+            R.id.mainHome -> {
+                val fragment = HomeFragment()
+                listener= fragment
+                changerOfFrg(fragment)
+            }
             R.id.readLater -> changerOfFrg(ReadLaterFragment())
             R.id.favorites -> changerOfFrg(FavoritiesFragment())
             R.id.profile -> changerOfFrg(ProfileFragment())
@@ -84,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         }
     }
 
-    override fun onSearch(text: String) {
-        NewsFragment.newSearch(text)
+    fun onSearch(text: String) {
+        listener?.onSearch(text)
     }
 }

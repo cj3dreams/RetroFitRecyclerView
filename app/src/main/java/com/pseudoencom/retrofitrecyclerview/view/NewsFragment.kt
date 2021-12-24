@@ -19,6 +19,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainRepository
+import com.pseudoencom.retrofitrecyclerview.OnSearchListener
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
 import com.pseudoencom.retrofitrecyclerview.model.Article
@@ -26,7 +27,7 @@ import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
-class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener {
+class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, OnSearchListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
@@ -101,6 +102,10 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
                 .commit()
         }
+    }
+
+    override fun onSearch(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

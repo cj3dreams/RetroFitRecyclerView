@@ -33,12 +33,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Array.newInstance
 
-class HomeFragment : Fragment(), View.OnClickListener{
+class HomeFragment : Fragment(), View.OnClickListener,OnSearchListener{
 
     private lateinit var viewModel: SharedViewModel
     private val retrofitService = ApiInterface.create()
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
+    private var listener:OnSearchListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,7 +59,9 @@ class HomeFragment : Fragment(), View.OnClickListener{
         list.add(NewsModel("Microsoft","Microsoft","2021-12-18"))
         list.add(NewsModel("Jetbrains","Jetbrains","2021-12-18"))
         list.add(NewsModel("Facebook","Facebook","2021-12-18"))
-        val fragmentAdapter = ViewPagerAdapter(childFragmentManager,list)
+        val adapter = ViewPagerAdapter(childFragmentManager,list)
+        listener =adapter
+        val fragmentAdapter = adapter
         viewPager = view.findViewById(R.id.vp2)
         viewPager.adapter = fragmentAdapter
         tabLayout = view.findViewById(R.id.tabLayout)
@@ -76,4 +79,7 @@ class HomeFragment : Fragment(), View.OnClickListener{
         Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onSearch(text: String) {
+        listener?.onSearch(text)
+    }
 }

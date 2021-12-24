@@ -105,19 +105,13 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     }
 
     override fun onSearch(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+        searchStringFromAct = text
     }
 
     companion object {
         fun newInstance(newsModel: NewsModel): NewsFragment {
             val fragment = NewsFragment()
             fragment.receiveNewsModel = newsModel
-            return fragment
-
-        }
-        fun newSearch(text: String): NewsFragment {
-            val fragment = NewsFragment()
-            fragment.searchStringFromAct = text
             return fragment
         }
     }

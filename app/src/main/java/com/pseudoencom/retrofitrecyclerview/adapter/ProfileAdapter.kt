@@ -28,9 +28,7 @@ class ProfileAdapter(
         return MyViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return myDataSet.size
-    }
+    override fun getItemCount() = myDataSet.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val itemData = myDataSet[position]

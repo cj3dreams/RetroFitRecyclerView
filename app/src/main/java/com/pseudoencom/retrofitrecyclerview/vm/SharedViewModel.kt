@@ -57,7 +57,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     fun fetchFavorites() = getFavorites().postValue(listForFavorites)
 
     fun giveList(e:MutableList<Article>) {
-        listForSeacrh = e
+        this.listForSeacrh = e
     }
     fun nowSearch() = search
     fun fetchSearch(text: String){
@@ -100,29 +100,16 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
         val listForSeacrh: MutableList<Article> = mutableListOf()
         for (item in this.listForSeacrh) {
             if ((item.title.contains(search.capitalize()) || item.title.contains(search) || item.title.contains(
-                    search.toLowerCase()
-                ) || item.title.contains(search.toUpperCase()) || item.title.startsWith(search)) || item.description.contains(search) || item.source.name.contains(
-                    search
-                )
-            )
-                listForSeacrh.add(
-                    Article(
-                        item.author,
-                        item.content,
-                        item.description,
-                        item.publishedAt,
-                        item.source,
-                        item.title,
-                        item.url,
-                        item.urlToImage
-                    )
-                )
+                    search.toLowerCase()) || item.title.contains(search.toUpperCase()) || item.title.startsWith(search)) || item.description.contains(search) || item.source.name.contains(
+                    search))
+                listForSeacrh.add(item)
         }
         return listForSeacrh
     }
+
     fun getProfile(): ArrayList<ProfileModel> {
         val listOfProfile: ArrayList<ProfileModel> = ArrayList()
-        listOfProfile.add(ProfileModel(1, R.drawable.ic_favorities, "Настройки"))
+        listOfProfile.add(ProfileModel(1, R.drawable.ic_favorities, "API Settings"))
         listOfProfile.add(ProfileModel(2, R.drawable.ic_favorities, "Категория"))
         listOfProfile.add(ProfileModel(3, R.drawable.ic_favorities, "Мои кошелки"))
         listOfProfile.add(ProfileModel(4, R.drawable.ic_favorities, "Долги"))

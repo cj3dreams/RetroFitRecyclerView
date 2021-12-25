@@ -37,7 +37,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
-    var searchStringFromAct = ""
+    var searchStringFromAct: String? = null
 
 
     private val retrofitService = ApiInterface.create()
@@ -69,21 +69,12 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             R.color.purple_700,
             R.color.teal_700)
 
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (searchStringFromAct != ""){
-        viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
-            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
-            recyclerView.adapter = adapter
-            forSearch = it
-        })
-        viewModel.fetchSearch(searchStringFromAct)
-        viewModel.giveList(forSearch)
-        }
-
         viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
@@ -105,7 +96,13 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     }
 
     override fun onSearch(text: String) {
-        searchStringFromAct = text
+        viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
+            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+            recyclerView.adapter = adapter
+            forSearch = it
+        })
+        viewModel.fetchSearch(text)
+        viewModel.giveList(forSearch)
     }
 
     companion object {

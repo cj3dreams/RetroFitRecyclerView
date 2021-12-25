@@ -52,15 +52,16 @@ class HomeFragment : Fragment(), View.OnClickListener,OnSearchListener{
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home,container,false)
-        val list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","All","2021-12-18"))
-        list.add(NewsModel("Apple","Apple","2021-12-18"))
-        list.add(NewsModel("Amazon","Amazon","2021-12-18"))
-        list.add(NewsModel("Google","Google","2021-12-18"))
-        list.add(NewsModel("Microsoft","Microsoft","2021-12-18"))
-        list.add(NewsModel("Jetbrains","Jetbrains","2021-12-18"))
-        list.add(NewsModel("Facebook","Facebook","2021-12-18"))
+        val list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","Technology","2021-12-18"))
+        list.add(NewsModel("Apple","Apple","2021-12-24"))
+        list.add(NewsModel("Amazon","Amazon","2021-12-24"))
+        list.add(NewsModel("Facebook","Facebook","2021-12-24"))
+        list.add(NewsModel("Google","Google","2021-12-24"))
+        list.add(NewsModel("Jetbrains","Jetbrains","2021-12-24"))
+        list.add(NewsModel("Microsoft","Microsoft","2021-12-24"))
+
         val adapter = ViewPagerAdapter(childFragmentManager,list)
-        listener =adapter
+        listener = adapter
         val fragmentAdapter = adapter
         viewPager = view.findViewById(R.id.vp2)
         viewPager.adapter = fragmentAdapter

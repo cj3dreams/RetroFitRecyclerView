@@ -33,17 +33,20 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Array.newInstance
 
-class HomeFragment : Fragment(), View.OnClickListener,OnSearchListener{
+class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
 
     private lateinit var viewModel: SharedViewModel
     private val retrofitService = ApiInterface.create()
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
-    private var listener:OnSearchListener? = null
-
+    private var listener: OnSearchListener? = null
+    lateinit var adapter: ViewPagerAdapter
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(
+                SharedViewModel::class.java
+            )
     }
 
     override fun onCreateView(
@@ -51,24 +54,22 @@ class HomeFragment : Fragment(), View.OnClickListener,OnSearchListener{
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home,container,false)
-        val list:ArrayList<NewsModel> = arrayListOf(NewsModel("All","Technology","2021-12-18"))
-        list.add(NewsModel("Apple","Apple","2021-12-24"))
-        list.add(NewsModel("Amazon","Amazon","2021-12-24"))
-        list.add(NewsModel("Facebook","Facebook","2021-12-24"))
-        list.add(NewsModel("Google","Google","2021-12-24"))
-        list.add(NewsModel("Jetbrains","Jetbrains","2021-12-24"))
-        list.add(NewsModel("Microsoft","Microsoft","2021-12-24"))
-
-        val adapter = ViewPagerAdapter(childFragmentManager,list)
+        val view =
+            LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home, container, false)
+        val list: ArrayList<NewsModel> = arrayListOf(NewsModel("All", "Technology", "2021-12-18"))
+        list.add(NewsModel("Apple", "Apple", "2021-12-24"))
+        list.add(NewsModel("Amazon", "Amazon", "2021-12-24"))
+        list.add(NewsModel("Facebook", "Facebook", "2021-12-24"))
+        list.add(NewsModel("Google", "Google", "2021-12-24"))
+        list.add(NewsModel("Jetbrains", "Jetbrains", "2021-12-24"))
+        list.add(NewsModel("Microsoft", "Microsoft", "2021-12-24"))
+        adapter = ViewPagerAdapter(childFragmentManager, list)
         listener = adapter
-        val fragmentAdapter = adapter
         viewPager = view.findViewById(R.id.vp2)
-        viewPager.adapter = fragmentAdapter
+        viewPager.adapter = adapter
+        viewPager.addOnPageChangeListener(adapter)
         tabLayout = view.findViewById(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
-
-
         return view
     }
 
@@ -77,7 +78,7 @@ class HomeFragment : Fragment(), View.OnClickListener,OnSearchListener{
     }
 
     override fun onClick(v: View?) {
-        Toast.makeText(requireContext(),"Clicked", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Clicked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onSearch(text: String) {

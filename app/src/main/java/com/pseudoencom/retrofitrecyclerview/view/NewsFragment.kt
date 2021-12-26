@@ -80,6 +80,12 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             recyclerView.adapter = adapter
             forSearch = it
         })
+
+        viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
+            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+            recyclerView.adapter = adapter
+            forSearch = it
+        })
         viewModel.sayHello(shimmerFrameLayout, recyclerView, view, receiveNewsModel,swipeRefreshLayout, oops)
         viewModel.giveList(forSearch)
     }
@@ -96,11 +102,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     }
 
     override fun onSearch(text: String) {
-        viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
-            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
-            recyclerView.adapter = adapter
-            forSearch = it
-        })
+        Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
         viewModel.fetchSearch(text)
         viewModel.giveList(forSearch)
     }

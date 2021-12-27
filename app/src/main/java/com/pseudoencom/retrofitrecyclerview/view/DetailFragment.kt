@@ -53,7 +53,7 @@ class DetailFragment : Fragment() {
         textView.text = idFrom.title
         textView2.text = idFrom.description + "\n" +
                 idFrom.publishedAt  + "\n" +
-                idFrom.source  + "\n" + idFrom.url
+                idFrom.source  + "\n" + "\n" + idFrom.url
                 loadImage(context,imageView, idFrom.urlToImage)
 
 

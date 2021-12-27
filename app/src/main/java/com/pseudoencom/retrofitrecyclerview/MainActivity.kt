@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         if (isVisible) {
             view3.visibility = View.VISIBLE
         } else {
-            view3.visibility == View.INVISIBLE
+            view3.visibility = View.INVISIBLE
         }
     }
 

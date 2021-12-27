@@ -65,17 +65,17 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/itemNewsTitle2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/itemImgR"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="10dp"
-        android:background="#CFCFCF"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/itemNewsTitle2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemImgR"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#CFCFCF"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
     <TextView
         android:id="@+id/itemNewsDes2"
@@ -83,10 +83,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemNewsTitle2"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:background="#CFCFCF"
         android:text="" />
+
+
+        <TextView
+            android:id="@+id/itemNewsDes3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemNewsDes2"
+            android:background="#CFCFCF"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="" />
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

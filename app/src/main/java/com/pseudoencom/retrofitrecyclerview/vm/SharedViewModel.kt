@@ -99,11 +99,11 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     fun searchNews(search: String): MutableList<Article> {
         val listForSeacrh: MutableList<Article> = mutableListOf()
         for (item in this.listForSeacrh) {
-            if ((item.title.contains(search.capitalize()) || item.title.contains(search) || item.title.contains(
-                    search.toLowerCase()) || item.title.contains(search.toUpperCase()) || item.title.startsWith(search)) || item.description.contains(search) || item.source.name.contains(
-                    search))
+            if (item.title.toLowerCase().contains(search.toLowerCase()) || item.title.toLowerCase().startsWith(search.toLowerCase()) ||
+                item.description.toLowerCase().contains(search.toLowerCase()) ||item.source.name.toLowerCase().contains(search.toLowerCase()))
                 listForSeacrh.add(item)
         }
+        this.listForSeacrh = listForSeacrh
         return listForSeacrh
     }
 

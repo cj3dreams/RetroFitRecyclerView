@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.pseudoencom.retrofitrecyclerview.R
@@ -84,8 +85,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
     ) {
 
         activity?.let {
-            Glide.with(it).load(originalImage)
-                .thumbnail(Glide.with(activity).load(originalImage))
+            Glide.with(it).load(originalImage).diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(ivUser)
         }
 

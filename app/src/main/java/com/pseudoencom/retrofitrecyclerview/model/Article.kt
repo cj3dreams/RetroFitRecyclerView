@@ -1,6 +1,5 @@
 package com.pseudoencom.retrofitrecyclerview.model
 
-import androidx.room.PrimaryKey
 
 data class Article(
     val author: Any,

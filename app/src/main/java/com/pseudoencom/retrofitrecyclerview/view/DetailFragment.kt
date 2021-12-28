@@ -52,8 +52,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         textView.text = idFrom.title
         textView2.text = idFrom.description + "\n" +
-                idFrom.publishedAt  + "\n" +
-                idFrom.source  + "\n" + "\n" + idFrom.url
+                idFrom.publishedAt + "\n" + "\n" + idFrom.url
                 loadImage(context,imageView, idFrom.urlToImage)
 
 
@@ -79,4 +78,17 @@ class DetailFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val act = activity as MainActivity
+        act.backButton.visibility = View.VISIBLE
+        act.view3.visibility = View.VISIBLE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val act = activity as MainActivity
+        act.backButton.visibility = View.GONE
+        act.view3.visibility = View.GONE
+    }
 }

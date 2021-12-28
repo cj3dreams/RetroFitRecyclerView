@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -23,7 +24,8 @@ import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var search: SearchView
-    private lateinit var view3: View
+    lateinit var view3: View
+    lateinit var backButton: Button
     private var listener:OnSearchListener? = null
     var isTrue = false
 //    private lateinit var viewModel: SharedViewModel
@@ -43,14 +45,17 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                     onSearch(p0!!)
                 return false
             }
-
-
         })
 
         bottomNavigationView = findViewById(R.id.botNav)
         bottomNavigationView.setOnItemSelectedListener(this)
         bottomNavigationView.selectedItemId = R.id.mainHome
         view3 = findViewById(R.id.shadow_view3)
+        backButton = findViewById(R.id.backButton)
+        backButton.setOnClickListener{
+            onBackPressed()
+        }
+        backButton.visibility = View.GONE
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -73,15 +78,6 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                 .commit()
         }
     }
-
-    fun showShadow(isVisible: Boolean) {
-        if (isVisible) {
-            view3.visibility = View.VISIBLE
-        } else {
-            view3.visibility = View.INVISIBLE
-        }
-    }
-
     fun onSearch(text: String) {
         listener?.onSearch(text)
     }

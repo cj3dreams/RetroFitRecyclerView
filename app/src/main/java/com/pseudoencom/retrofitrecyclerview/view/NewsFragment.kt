@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
@@ -22,12 +23,15 @@ import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.OnSearchListener
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
+import com.pseudoencom.retrofitrecyclerview.data.AppDatabase
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
 class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, OnSearchListener {
+    lateinit var database: AppDatabase
+    private val DB_NAME: String = "DB_NAME"
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
@@ -69,7 +73,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             R.color.purple_700,
             R.color.teal_700)
 
-
+        database = Room.databaseBuilder(requireContext(), AppDatabase::class.java, DB_NAME).allowMainThreadQueries().build()
         return view
     }
 
@@ -122,7 +126,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel2.addReadLaterList(forSearch[itemView])
+            viewModel2.addReadLaterList(forSearch[itemView], database)
             Toast.makeText(requireContext(),
                 "Added to Read Later", Toast.LENGTH_SHORT).show()
         }

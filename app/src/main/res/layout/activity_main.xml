@@ -16,11 +16,25 @@
         android:minHeight="83dp">
 
         <RelativeLayout
+            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center">
+            android:layout_height="50dp">
+            <RelativeLayout
+                android:layout_width="150dp"
+                android:layout_height="50dp">
 
+            <Button
+
+                android:layout_marginRight="10dp"
+                android:id="@+id/backButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentBottom="true"
+
+
+                android:background="?attr/homeAsUpIndicator" />
             <TextView
+                android:layout_toRightOf="@id/backButton"
                 android:fontFamily="@font/bebasneue_bold"
                 android:id="@+id/likeAAppName"
                 android:layout_width="wrap_content"
@@ -32,6 +46,7 @@
                 android:textColor="#121212"
                 android:textSize="28sp"
                 android:textStyle="bold" />
+            </RelativeLayout>
 
             <SearchView
                 android:id="@+id/searchView"
@@ -39,8 +54,9 @@
                 android:layout_height="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="55dp"/>
+                android:layout_marginLeft="65dp"
+                android:layout_marginRight="10dp" />
+
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     <View

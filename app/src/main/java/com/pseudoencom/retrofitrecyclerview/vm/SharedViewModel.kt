@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
+import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
+import com.pseudoencom.retrofitrecyclerview.data.AppDatabase
 import com.pseudoencom.retrofitrecyclerview.model.*
 import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
 import retrofit2.Call
@@ -27,21 +29,23 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
 
     var mutableLiveData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var readLaterData: MutableLiveData<MutableList<Article>> = MutableLiveData()
+    var readLaterData: MutableLiveData<MutableList<ArticleModel>> = MutableLiveData()
     var search: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var mProfile: MutableLiveData<ArrayList<ProfileModel>> = MutableLiveData()
 
     var listForSeacrh: MutableList<Article> = mutableListOf()
     var listForFavorites: MutableList<Article> = mutableListOf()
-    var listForReadLater: MutableList<Article> = mutableListOf()
+    var listForReadLater: MutableList<ArticleModel> = mutableListOf()
     var listOfProfile: ArrayList<ProfileModel> = arrayListOf()
 
 
-    fun removeFromReadLaterList(article: Article){
-        listForReadLater.remove(article)
+    fun removeFromReadLaterList(article: Int, appDatabase: AppDatabase){
+        appDatabase.getArticlesDao().delete("$article")
     }
-    fun addReadLaterList(article: Article){
-        listForReadLater.add(article)
+    fun addReadLaterList(article: Article, appDatabase: AppDatabase){
+        appDatabase.getArticlesDao().insert(ArticleModel(null,article.author.toString(), article.content, article.description, article.publishedAt, article.source.name, article.title, article.url, article.urlToImage))
+        listForReadLater = appDatabase.getArticlesDao().getArticles()
+
     }
     fun getReadLater() = readLaterData
     fun fetchReadLater() = getReadLater().postValue(listForReadLater)

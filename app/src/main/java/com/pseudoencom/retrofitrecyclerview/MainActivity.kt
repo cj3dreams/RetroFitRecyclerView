@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.SearchView
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,11 +25,9 @@ import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var search: SearchView
-    lateinit var view3: View
     lateinit var backButton: Button
+    lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private var listener:OnSearchListener? = null
-    var isTrue = false
-//    private lateinit var viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +45,10 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                 return false
             }
         })
-
+        toolbar = findViewById(R.id.toolbar)
         bottomNavigationView = findViewById(R.id.botNav)
         bottomNavigationView.setOnItemSelectedListener(this)
         bottomNavigationView.selectedItemId = R.id.mainHome
-        view3 = findViewById(R.id.shadow_view3)
         backButton = findViewById(R.id.backButton)
         backButton.setOnClickListener{
             onBackPressed()

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
@@ -49,5 +50,11 @@ class ProfileFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
+    }
+    override fun onResume() {
+        super.onResume()
+        val act = activity as MainActivity
+        act.backButton.visibility = View.GONE
+        act.toolbar.elevation = 7F
     }
 }

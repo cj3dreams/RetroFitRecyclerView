@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
+import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
@@ -135,5 +136,11 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
             replace(R.id.frgChanger, FavoritiesFragment())
             commit()
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        val act = activity as MainActivity
+        act.backButton.visibility = View.GONE
+        act.toolbar.elevation = 7F
     }
 }

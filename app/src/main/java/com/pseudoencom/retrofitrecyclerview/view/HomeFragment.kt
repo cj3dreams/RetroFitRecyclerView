@@ -84,4 +84,10 @@ class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
     override fun onSearch(text: String) {
         listener?.onSearch(text)
     }
+    override fun onResume() {
+        super.onResume()
+        val act = activity as MainActivity
+        act.backButton.visibility = View.GONE
+        act.toolbar.elevation = 0F
+    }
 }

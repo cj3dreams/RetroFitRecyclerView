@@ -1,50 +1,39 @@
 package com.pseudoencom.retrofitrecyclerview.vm
 
-import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
-import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
-import com.pseudoencom.retrofitrecyclerview.data.AppDatabase
 import com.pseudoencom.retrofitrecyclerview.model.*
-import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.Delayed
-import java.util.logging.Handler
 
 class SharedViewModel constructor(private val repository: MainRepository)  : ViewModel() {
 
     var mutableLiveData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var readLaterData: MutableLiveData<MutableList<ArticleModel>> = MutableLiveData()
+    var readLaterData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var search: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var mProfile: MutableLiveData<ArrayList<ProfileModel>> = MutableLiveData()
 
     var listForSeacrh: MutableList<Article> = mutableListOf()
     var listForFavorites: MutableList<Article> = mutableListOf()
-    var listForReadLater: MutableList<ArticleModel> = mutableListOf()
+    var listForReadLater: MutableList<Article> = mutableListOf()
     var listOfProfile: ArrayList<ProfileModel> = arrayListOf()
 
 
-    fun removeFromReadLaterList(article: Int, appDatabase: AppDatabase){
-        appDatabase.getArticlesDao().delete("$article")
+    fun removeFromReadLaterList(article: Article){
+        listForReadLater.remove(article)
     }
-    fun addReadLaterList(article: Article, appDatabase: AppDatabase){
-        appDatabase.getArticlesDao().insert(ArticleModel(null,article.author.toString(), article.content, article.description, article.publishedAt, article.source.name, article.title, article.url, article.urlToImage))
-        listForReadLater = appDatabase.getArticlesDao().getArticles()
+    fun addReadLaterList(article: Article){
+        listForReadLater.add(article)
 
     }
     fun getReadLater() = readLaterData

@@ -14,25 +14,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.OnSearchListener
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
-import com.pseudoencom.retrofitrecyclerview.data.AppDatabase
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
 class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, OnSearchListener {
-    lateinit var database: AppDatabase
-    private val DB_NAME: String = "DB_NAME"
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
     private lateinit var viewModel2: SharedViewModel
@@ -41,7 +35,6 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
-    var searchStringFromAct: String? = null
 
 
     private val retrofitService = ApiInterface.create()
@@ -72,8 +65,6 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             R.color.purple_500,
             R.color.purple_700,
             R.color.teal_700)
-
-        database = Room.databaseBuilder(requireContext(), AppDatabase::class.java, DB_NAME).allowMainThreadQueries().build()
         return view
     }
 
@@ -124,35 +115,28 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         return true
     }
     fun basicAlert(view: View){
-        val positiveButtonClick = { dialog: DialogInterface, which: Int ->
-            val itemView = view?.tag as Int
-            viewModel2.addReadLaterList(forSearch[itemView], database)
-            Toast.makeText(requireContext(),
-                "Added to Read Later", Toast.LENGTH_SHORT).show()
-        }
         val negativeButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
+            viewModel2.addReadLaterList(forSearch[itemView])
+            Toast.makeText(requireContext(), "Added to Read Later", Toast.LENGTH_SHORT).show()
+        }
+        val positiveButtonClick = { dialog: DialogInterface, which: Int ->
+            val itemView = view?.tag as Int
             viewModel2.addFavoritesList(forSearch[itemView])
-            Toast.makeText(
-                requireContext(),
-                "Added to Favorites", Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
         }
         val neutralButtonClick = { dialog: DialogInterface, which: Int ->
             Toast.makeText(
-                requireContext(),
-                "Cancelled", Toast.LENGTH_SHORT
-            ).show()
+                requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
         }
-
         val builder = AlertDialog.Builder(requireContext())
 
         with(builder)
         {
             setTitle("Add to Favorites/Read Later")
             setMessage("Choose which one, add to:")
-            setPositiveButton("Read Later", DialogInterface.OnClickListener(function = positiveButtonClick))
-            setNegativeButton("Favorites", negativeButtonClick)
+            setPositiveButton("Favorites", DialogInterface.OnClickListener(function = positiveButtonClick))
+            setNegativeButton("Read Later", negativeButtonClick)
             setNeutralButton("Cancel", neutralButtonClick)
             show()
         }

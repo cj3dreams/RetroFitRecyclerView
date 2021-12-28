@@ -15,25 +15,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
+import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
-import com.pseudoencom.retrofitrecyclerview.data.AppDatabase
 import com.pseudoencom.retrofitrecyclerview.model.Article
-import com.pseudoencom.retrofitrecyclerview.model.ArticleModel
-import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
 class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, SwipeRefreshLayout.OnRefreshListener {
-    lateinit var database: AppDatabase
-    private val DB_NAME: String = "DB_NAME"
-
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
@@ -66,9 +59,6 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layoutR)
         swipeRefreshLayout.setOnRefreshListener (this)
         oops = view.findViewById(R.id.oopsR)
-
-        database = Room.databaseBuilder(requireContext(), AppDatabase::class.java, DB_NAME).allowMainThreadQueries().build()
-
         return view
     }
 
@@ -78,7 +68,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         viewModel.getReadLater().observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            forSearch = it[]
+            forSearch = it
 
             if (adapter.itemCount == 0){
                 recyclerView.visibility = View.GONE
@@ -111,7 +101,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel.removeFromReadLaterList(itemView, database)
+            viewModel.removeFromReadLaterList(forSearch[itemView])
             Handler().postDelayed({
                 swipeRefreshLayout.post {
                     onRefresh()
@@ -137,8 +127,6 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
             setNegativeButton("Cancel", negativeButtonClick)
             show()
         }
-
-
     }
 
     override fun onRefresh() {
@@ -146,5 +134,11 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
             replace(R.id.frgChanger, ReadLaterFragment())
             commit()
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        val act = activity as MainActivity
+        act.backButton.visibility = View.GONE
+        act.toolbar.elevation = 7F
     }
 }

@@ -19,6 +19,7 @@ import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
+import kotlin.math.absoluteValue
 
 
 class DetailFragment : Fragment() {
@@ -82,13 +83,17 @@ class DetailFragment : Fragment() {
         super.onResume()
         val act = activity as MainActivity
         act.backButton.visibility = View.VISIBLE
-        act.view3.visibility = View.VISIBLE
+        act.toolbar.elevation = 7F
+        if (act.backButton.isPressed){
+            act.backButton.visibility = View.GONE
+            act.toolbar.elevation = 0F
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         val act = activity as MainActivity
         act.backButton.visibility = View.GONE
-        act.view3.visibility = View.GONE
+        act.toolbar.elevation = 0F
     }
 }

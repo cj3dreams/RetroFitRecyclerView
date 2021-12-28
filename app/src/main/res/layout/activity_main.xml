@@ -16,6 +16,7 @@
         android:minHeight="83dp">
 
         <RelativeLayout
+            android:id="@+id/relativeToolbar"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -23,29 +24,30 @@
                 android:layout_width="150dp"
                 android:layout_height="50dp">
 
-            <Button
+                <Button
 
-                android:layout_marginRight="10dp"
-                android:id="@+id/backButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentBottom="true"
+                    android:id="@+id/backButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="15dp"
 
 
-                android:background="?attr/homeAsUpIndicator" />
-            <TextView
-                android:layout_toRightOf="@id/backButton"
-                android:fontFamily="@font/bebasneue_bold"
-                android:id="@+id/likeAAppName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp"
-                android:text="News"
-                android:textAllCaps="true"
-                android:textColor="#121212"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                    android:background="?attr/homeAsUpIndicator" />
+
+                <TextView
+                    android:id="@+id/likeAAppName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@id/backButton"
+                    android:fontFamily="@font/bebasneue_bold"
+                    android:text="News"
+                    android:textAllCaps="true"
+                    android:textColor="#121212"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <SearchView
@@ -54,18 +56,11 @@
                 android:layout_height="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="65dp"
+                android:layout_marginLeft="75dp"
                 android:layout_marginRight="10dp" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
-    <View
-        android:id="@+id/shadow_view3"
-        android:layout_width="match_parent"
-        android:layout_height="7dp"
-        android:layout_below="@+id/toolbar"
-        android:visibility="gone"
-        android:background="@drawable/shadow2" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frgChanger"

@@ -24,7 +24,7 @@ import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var search: SearchView
+    lateinit var search: SearchView
     lateinit var backButton: Button
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private var listener:OnSearchListener? = null

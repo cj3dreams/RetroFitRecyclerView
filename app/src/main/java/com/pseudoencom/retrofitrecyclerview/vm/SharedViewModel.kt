@@ -102,11 +102,11 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
 
     fun getProfile(): ArrayList<ProfileModel> {
         val listOfProfile: ArrayList<ProfileModel> = ArrayList()
-        listOfProfile.add(ProfileModel(1, R.drawable.ic_favorities, "API Settings"))
-        listOfProfile.add(ProfileModel(2, R.drawable.ic_favorities, "Категория"))
-        listOfProfile.add(ProfileModel(3, R.drawable.ic_favorities, "Мои кошелки"))
-        listOfProfile.add(ProfileModel(4, R.drawable.ic_favorities, "Долги"))
-        listOfProfile.add(ProfileModel(5, R.drawable.ic_favorities, "Помощь и Поддержка"))
+        listOfProfile.add(ProfileModel(1, R.drawable.ic_api, "API Token"))
+        listOfProfile.add(ProfileModel(2, R.drawable.ic_sorting, "Sorting"))
+        listOfProfile.add(ProfileModel(3, R.drawable.ic_date, "Date from"))
+        listOfProfile.add(ProfileModel(4, R.drawable.ic_cache, "Clean cache"))
+        listOfProfile.add(ProfileModel(5, R.drawable.ic_about, "About me"))
         this.listOfProfile = listOfProfile
         return listOfProfile
     }

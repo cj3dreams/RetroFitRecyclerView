@@ -4,18 +4,23 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/bottom_nav_icon_color_selector.xml" value="0.2153846153846154" />
+        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_about.xml" value="0.21875" />
+        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_api.xml" value="0.21875" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_baseline_access_time_filled_24.xml" value="0.21875" />
+        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_cache.xml" value="0.21875" />
+        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_date.xml" value="0.21875" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_favorities.xml" value="0.21875" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_hello.xml" value="0.21875" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_mainhome.xml" value="0.1140625" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_profile.xml" value="0.11145833333333334" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_readlater.xml" value="0.11145833333333334" />
+        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_sorting.xml" value="0.21875" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/ic_splashain.xml" value="0.21875" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/shadow.xml" value="0.11145833333333334" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/shadow2.xml" value="0.2153846153846154" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/drawable/shadowforimageview.xml" value="0.11145833333333334" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/font/fonts.xml" value="0.12447916666666667" />
-        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/layout/activity_main.xml" value="0.67" />
+        <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/layout/activity_main.xml" value="0.516546762589928" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/layout/activity_splash_screen.xml" value="0.21" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/layout/fragment_blank.xml" value="0.18854166666666666" />
         <entry key="..\:/X-Lab/zAndroidStudio/RetroFitRecyclerView/app/src/main/res/layout/fragment_detail.xml" value="0.20260416666666667" />

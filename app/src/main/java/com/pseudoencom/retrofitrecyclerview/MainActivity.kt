@@ -1,33 +1,23 @@
 package com.pseudoencom.retrofitrecyclerview
 
-import android.app.Activity
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.SearchView
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.snackbar.Snackbar
-import com.pseudoencom.retrofitrecyclerview.model.Article
-import com.pseudoencom.retrofitrecyclerview.view.*
-import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
-import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
+import com.pseudoencom.retrofitrecyclerview.modules.main.view.*
+import com.pseudoencom.retrofitrecyclerview.utils.OnSearchListener
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     lateinit var search: SearchView
     lateinit var backButton: Button
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private var listener:OnSearchListener? = null
+    private var listener: OnSearchListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

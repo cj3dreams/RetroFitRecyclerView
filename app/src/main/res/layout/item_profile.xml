@@ -8,7 +8,7 @@
     android:focusable="true"
     android:foreground="?selectableItemBackground"
     android:padding="16dp"
-    tools:context=".view.ProfileFragment">
+    tools:context=".modules.main.view.ProfileFragment">
 
     <TextView
         android:id="@+id/itemPtxName"

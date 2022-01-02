@@ -6,4 +6,5 @@
     <string name="readLater">Читать позже</string>
     <string name="favorities">Избранное</string>
     <string name="profile">Профиль</string>
+    <string name="telegram"><a href="tg://t.me/cj3dreams/">My telegram</a></string>
 </resources>

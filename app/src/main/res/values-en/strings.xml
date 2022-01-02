@@ -6,4 +6,5 @@
     <string name="readLater">Read later</string>
     <string name="favorities">Favorities</string>
     <string name="profile">Profile</string>
+    <string name="telegram"><a href="tg://t.me/cj3dreams/">My telegram</a></string>
 </resources>

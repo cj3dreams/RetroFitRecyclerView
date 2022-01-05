@@ -1,6 +1,7 @@
 package com.pseudoencom.retrofitrecyclerview.repository.network
 
 import com.pseudoencom.retrofitrecyclerview.modules.main.model.DataNewsModelClass
+import com.yolla.android.mvvm.network.interceptor.LoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,6 +24,7 @@ interface ApiInterface {
         fun create() : ApiInterface {
 
             val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(LoggingInterceptor())
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)

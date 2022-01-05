@@ -96,8 +96,8 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     }
 
     override fun onClick(v: View?) {
-        val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
+        val position = v?.tag as Int
+        val DetailFragment = DetailFragment.newInstance(viewModel.getNews()[position])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
@@ -128,13 +128,13 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
 
     fun basicAlert(view: View) {
         val negativeButtonClick = { dialog: DialogInterface, which: Int ->
-            val itemView = view?.tag as Int
-            sharedViewModel.addReadLaterList(forSearch[itemView])
+            val position = view?.tag as Int
+            sharedViewModel.addReadLaterList(viewModel.getNews().get(position))
             Toast.makeText(requireContext(), "Added to Read Later", Toast.LENGTH_SHORT).show()
         }
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
-            val itemView = view?.tag as Int
-            sharedViewModel.addFavoritesList(forSearch[itemView])
+            val position = view?.tag as Int
+            sharedViewModel.addToFavorites(viewModel.getNews().get(position))
             Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
         }
         val neutralButtonClick = { dialog: DialogInterface, which: Int ->

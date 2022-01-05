@@ -2,7 +2,7 @@ package com.pseudoencom.retrofitrecyclerview.modules.main.model
 
 
 data class Article(
-    val author: Any,
+    val author: String?,
     val content: String,
     val description: String,
     val publishedAt: String,

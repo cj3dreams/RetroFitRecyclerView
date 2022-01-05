@@ -1,16 +1,17 @@
+package com.pseudoencom.retrofitrecyclerview.repository.local.data
+
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.pseudoencom.retrofitrecyclerview.modules.main.model.ArticleModel
 
 @Dao
 interface ArticlesDao {
 
     @Query("SELECT * FROM articles")
-    fun getArticles(): MutableList<ArticleModel>
+    fun getArticles(): List<ArticleModel>
 
-    @Query("DELETE from articles WHERE id = :id")
-    fun delete(id: Int)
+    @Query("DELETE from articles WHERE url = :url")
+    fun delete(url: String)
 
     @Insert
     fun insert(article: ArticleModel)

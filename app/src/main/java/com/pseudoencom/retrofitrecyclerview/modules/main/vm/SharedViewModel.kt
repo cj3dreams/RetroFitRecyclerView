@@ -1,17 +1,17 @@
 package com.pseudoencom.retrofitrecyclerview.modules.main.vm
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.pseudoencom.retrofitrecyclerview.R
+import com.pseudoencom.retrofitrecyclerview.core.BaseViewModel
 import com.pseudoencom.retrofitrecyclerview.modules.main.model.*
 
-class SharedViewModel : ViewModel() {
+class SharedViewModel(application: Application) : BaseViewModel(application) {
 
-    var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var readLaterData: MutableLiveData<MutableList<Article>> = MutableLiveData()
     var mProfile: MutableLiveData<ArrayList<ProfileModel>> = MutableLiveData()
     var listForSeacrh: MutableList<Article> = mutableListOf()
-    var listForFavorites: MutableList<Article> = mutableListOf()
     var listForReadLater: MutableList<Article> = mutableListOf()
     var listOfProfile: ArrayList<ProfileModel> = arrayListOf()
 
@@ -28,18 +28,17 @@ class SharedViewModel : ViewModel() {
 
     fun fetchReadLater() = getReadLater().postValue(listForReadLater)
 
+    fun getFavorites(): ArrayList<Article> {
+        return repository.getArticles()
+    }
+
+    fun addToFavorites(article: Article) {
+        repository.insertArticle(article)
+    }
 
     fun removeFromFavoritesList(article: Article) {
-        listForFavorites.remove(article)
+        repository.removeFromFavorites(article.url)
     }
-
-    fun addFavoritesList(article: Article) {
-        listForFavorites.add(article)
-    }
-
-    fun getFavorites() = favoritesData
-
-    fun fetchFavorites() = getFavorites().postValue(listForFavorites)
 
     fun giveList(e: MutableList<Article>) {
         this.listForSeacrh = e

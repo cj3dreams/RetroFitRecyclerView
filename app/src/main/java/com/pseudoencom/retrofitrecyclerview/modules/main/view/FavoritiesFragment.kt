@@ -60,7 +60,7 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getFavorites().observe(viewLifecycleOwner, Observer {
+        viewModel.getFavorites().also {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
             forSearch = it
@@ -72,8 +72,7 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
                 recyclerView.visibility = View.VISIBLE
                 oops.visibility = View.GONE
             }
-        })
-        viewModel.fetchFavorites()
+        }
         viewModel.giveList(forSearch)
     }
 
@@ -93,7 +92,7 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
     }
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
-            val itemView = view?.tag as Int
+            val itemView = view.tag as Int
             viewModel.removeFromFavoritesList(forSearch[itemView])
             Handler().postDelayed({
                 swipeRefreshLayout.post {

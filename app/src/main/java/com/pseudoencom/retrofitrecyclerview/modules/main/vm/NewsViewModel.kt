@@ -1,5 +1,6 @@
 package com.pseudoencom.retrofitrecyclerview.modules.main.vm
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,7 +18,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class NewsViewModel : BaseViewModel() {
+class NewsViewModel(application: Application) : BaseViewModel(application) {
     private var newsList: List<Article> = ArrayList()
 
     fun getNews(): List<Article> = newsList

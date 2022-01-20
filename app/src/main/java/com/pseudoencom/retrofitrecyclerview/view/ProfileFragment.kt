@@ -65,7 +65,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 2 -> toast("2")
                 3 -> toast("3")
                 4 -> {context?.cacheDir?.deleteRecursively(); toast("Cleaned at " + (context?.cacheDir?.path).toString()); }
-                5 -> showdialog("About me","none", View.INVISIBLE, false, "You can feel free to contact with me \n \n jamshed.saleh@livo.tj \n" + (R.string.telegram))
+                5 -> showdialog("About me","none", View.INVISIBLE, false, "You can feel free to contact with me \n \n jamshed.saleh@livo.tj \n" + getString(R.string.telegram))
                 else -> toast("Error of WHEN Operator")
             }
         }

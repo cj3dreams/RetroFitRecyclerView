@@ -1,4 +1,4 @@
-package com.yolla.android.mvvm.network.interceptor
+package com.pseudoencom.retrofitrecyclerview.repository.network
 
 import android.util.Log
 import okhttp3.Interceptor

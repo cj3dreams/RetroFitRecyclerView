@@ -1,13 +1,14 @@
-package com.pseudoencom.retrofitrecyclerview.model
+package com.pseudoencom.retrofitrecyclerview.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "articles")
-data class ArticleModel(
+data class ArticlesEntity (
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = 0,
+    @ColumnInfo(name ="id")
+    var id: Int = 0,
     @ColumnInfo(name = "author")
     val author: String,
     @ColumnInfo(name = "content")
@@ -23,6 +24,5 @@ data class ArticleModel(
     @ColumnInfo(name = "url")
     val url: String,
     @ColumnInfo(name = "urlToImage")
-    val urlToImage: String) {
-
-}
+    val urlToImage: String
+        )

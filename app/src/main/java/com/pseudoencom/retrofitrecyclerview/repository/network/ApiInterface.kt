@@ -1,7 +1,7 @@
 package com.pseudoencom.retrofitrecyclerview.repository.network
 
 import com.pseudoencom.retrofitrecyclerview.modules.main.model.DataNewsModelClass
-import com.yolla.android.mvvm.network.interceptor.LoggingInterceptor
+import com.pseudoencom.retrofitrecyclerview.repository.network.LoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

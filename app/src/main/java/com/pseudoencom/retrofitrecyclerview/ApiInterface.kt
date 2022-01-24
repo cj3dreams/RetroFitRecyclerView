@@ -18,6 +18,7 @@ interface ApiInterface {
     fun getNews(@Query("q") code: String, @Query("from") date:String,
                 @Query("sortBy") sortBy: String,@Query("apiKey") apiKey: String) : Call<DataNewsModelClass>
 
+
     companion object {
 
         var BASE_URL = "https://newsapi.org/v2/"

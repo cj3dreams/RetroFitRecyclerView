@@ -1,4 +1,5 @@
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
@@ -12,7 +13,7 @@ interface ArticlesDao {
     @Insert
     fun insert(article: ArticlesEntity?)
 
-    @Query("DELETE from articles WHERE id = :id")
+    @Delete
     fun delete(id: Int?)
 
 }

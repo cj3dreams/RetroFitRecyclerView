@@ -22,6 +22,7 @@ import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
+import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
@@ -38,7 +39,7 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
 
 
     private val retrofitService = ApiInterface.create()
-    var forSearch: MutableList<Article> = mutableListOf()
+    var gorFromApi  : MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,7 +71,7 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
         viewModel.getFavorites().observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            forSearch = it
+            gorFromApi = it
             if (adapter.itemCount == 0){
                 recyclerView.visibility = View.GONE
                 oops.visibility = View.VISIBLE
@@ -81,12 +82,12 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
             }
         })
         viewModel.fetchFavorites()
-        viewModel.giveList(forSearch)
+        viewModel.giveList(gorFromApi)
     }
 
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
+        val DetailFragment = DetailFragment.newInstance(gorFromApi[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
      setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
@@ -101,7 +102,7 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel.removeFromFavoritesList(forSearch[itemView])
+            viewModel.removeFromFavoritesList(gorFromApi[itemView])
             Handler().postDelayed({
                 swipeRefreshLayout.post {
                     onRefresh()

@@ -10,6 +10,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
+import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 import com.pseudoencom.retrofitrecyclerview.model.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,22 +18,22 @@ import retrofit2.Response
 
 class SharedViewModel constructor(private val repository: MainRepository)  : ViewModel() {
 
-    var mutableLiveData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var favoritesData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var readLaterData: MutableLiveData<MutableList<Article>> = MutableLiveData()
-    var search: MutableLiveData<MutableList<Article>> = MutableLiveData()
+    var mutableLiveData: MutableLiveData<MutableList<ArticlesEntity>> = MutableLiveData()
+    var favoritesData: MutableLiveData<MutableList<ArticlesEntity>> = MutableLiveData()
+    var readLaterData: MutableLiveData<MutableList<ArticlesEntity>> = MutableLiveData()
+    var search: MutableLiveData<MutableList<ArticlesEntity>> = MutableLiveData()
     var mProfile: MutableLiveData<ArrayList<ProfileModel>> = MutableLiveData()
 
-    var listForSeacrh: MutableList<Article> = mutableListOf()
-    var listForFavorites: MutableList<Article> = mutableListOf()
-    var listForReadLater: MutableList<Article> = mutableListOf()
+    var listForSeacrh: MutableList<ArticlesEntity> = mutableListOf()
+    var listForFavorites: MutableList<ArticlesEntity> = mutableListOf()
+    var listForReadLater: MutableList<ArticlesEntity> = mutableListOf()
     var listOfProfile: ArrayList<ProfileModel> = arrayListOf()
 
 
-    fun removeFromReadLaterList(article: Article){
+    fun removeFromReadLaterList(article: ArticlesEntity){
         listForReadLater.remove(article)
     }
-    fun addReadLaterList(article: Article){
+    fun addReadLaterList(article: ArticlesEntity){
         listForReadLater.add(article)
 
     }
@@ -40,16 +41,16 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     fun fetchReadLater() = getReadLater().postValue(listForReadLater)
 
 
-    fun removeFromFavoritesList(article: Article){
+    fun removeFromFavoritesList(article: ArticlesEntity){
         listForFavorites.remove(article)
     }
-    fun addFavoritesList(article: Article){
+    fun addFavoritesList(article: ArticlesEntity){
         listForFavorites.add(article)
     }
     fun getFavorites() = favoritesData
     fun fetchFavorites() = getFavorites().postValue(listForFavorites)
 
-    fun giveList(e:MutableList<Article>) {
+    fun giveList(e:MutableList<ArticlesEntity>) {
         this.listForSeacrh = e
     }
     fun nowSearch() = search
@@ -62,38 +63,44 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
         mProfile.value = listOfProfile
     }
 
-    fun sayHello(shimmerFrameLayout: ShimmerFrameLayout, recyclerView: RecyclerView, view: View?, receiveNewsModel: NewsModel, s: SwipeRefreshLayout, oops:ImageView){
-        shimmerFrameLayout.visibility = View.VISIBLE
-        oops.visibility = View.INVISIBLE
+    fun getDataFromApi(receiveNewsModel: NewsModel){
 
         val response = repository.getAllData(receiveNewsModel)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
                 if (response != null) {
-                    mutableLiveData.postValue(response.body()!!.articles)
-                    recyclerView.visibility = View.VISIBLE
-                    shimmerFrameLayout.stopShimmer()
-                    s.isRefreshing = false
-
+                    val responseData = response.body()!!.articles
+                    val mutableList = mutableListOf<ArticlesEntity>()
+                    for (i in 0 until responseData.size){
+                        mutableList.add((ArticlesEntity(0,
+                            0,
+                            responseData[i].content,
+                            responseData[i].description,
+                            responseData[i].publishedAt,
+                            responseData[i].source.name,
+                            responseData[i].title,
+                            responseData[i].url,
+                            "https://www.reuters.com/resizer/fJFkekJW137EJppxumHfEwAXJac=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/X2HY7W5EBRMPVKEDFTONJBJ7YA.jpg",
+                            receiveNewsModel.code, 0, 0)))
+                        }
+                    mutableLiveData.postValue(mutableList)
                 }
             }
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
-                if (view!=null) {
-                    val snackBar: Snackbar = Snackbar.make(view, "Network Error: $t", 2500)
-                    snackBar.show()
-                    s.isRefreshing = false
-                    shimmerFrameLayout.stopShimmer()
-                    shimmerFrameLayout.visibility = View.INVISIBLE
-                    oops.visibility = View.VISIBLE
-                }
+//                    val snackBar: Snackbar = Snackbar.make(view, "Network Error: $t", 2500)
+//                    snackBar.show()
+//                    s.isRefreshing = false
+//                    shimmerFrameLayout.stopShimmer()
+//                    shimmerFrameLayout.visibility = View.INVISIBLE
+//                    oops.visibility = View.VISIBLE
             }
         })
     }
-    fun searchNews(search: String): MutableList<Article> {
-        val listForSeacrh: MutableList<Article> = mutableListOf()
+    fun searchNews(search: String): MutableList<ArticlesEntity> {
+        val listForSeacrh: MutableList<ArticlesEntity> = mutableListOf()
         for (item in this.listForSeacrh) {
             if (item.title.toLowerCase().contains(search.toLowerCase()) || item.title.toLowerCase().startsWith(search.toLowerCase()) ||
-                item.description.toLowerCase().contains(search.toLowerCase()) ||item.source.name.toLowerCase().contains(search.toLowerCase()))
+                item.description.toLowerCase().contains(search.toLowerCase()))
                 listForSeacrh.add(item)
         }
         this.listForSeacrh = listForSeacrh

@@ -2,6 +2,9 @@ package com.pseudoencom.retrofitrecyclerview.view
 
 import android.content.Context
 import android.content.DialogInterface
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +24,8 @@ import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.OnSearchListener
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
+import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
+import com.pseudoencom.retrofitrecyclerview.data.RoomViewModel
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
@@ -30,20 +35,21 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SharedViewModel
     private lateinit var viewModel2: SharedViewModel
+    private lateinit var roomViewModel: RoomViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
 
-
     private val retrofitService = ApiInterface.create()
-    var forSearch: MutableList<Article> = mutableListOf()
+    var gotFromApi: MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
         viewModel2 = ViewModelProvider(requireActivity(), MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
+        roomViewModel = ViewModelProvider(requireActivity()).get(RoomViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -58,7 +64,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         shimmerFrameLayout = view.findViewById(R.id.shimmer)
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
         swipeRefreshLayout.setOnRefreshListener{
-            viewModel.sayHello(shimmerFrameLayout, recyclerView, view, receiveNewsModel, swipeRefreshLayout, oops)
+            viewModel.getDataFromApi(receiveNewsModel)
         }
         swipeRefreshLayout.setColorSchemeResources(
             R.color.purple_200,
@@ -70,24 +76,51 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
-            adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
-            recyclerView.adapter = adapter
-            forSearch = it
-        })
+        var isOnline = isOnline(requireContext())
+        shimmerFrameLayout.visibility = View.VISIBLE
+        oops.visibility = View.INVISIBLE
+        if(isOnline) {
+            viewModel.getDataFromApi(receiveNewsModel)
+            viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
+                gotFromApi = it
+                roomViewModel.setNewsToDb(gotFromApi)
+                roomViewModel.getAllNewsObservers().observe(viewLifecycleOwner, Observer {
+                    adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                    recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                    viewModel.giveList(it.toMutableList())
+                })
+            })
+            recyclerView.visibility = View.VISIBLE
+            shimmerFrameLayout.stopShimmer()
+            swipeRefreshLayout.isRefreshing = false
+        }else if(!isOnline){
+            val isEmpty = roomViewModel.isEmpty()
+            if(!isEmpty){
+                roomViewModel.getAllNewsObservers().observe(viewLifecycleOwner, Observer {
+                    adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                    recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                    viewModel.giveList(it.toMutableList())
+                })
+            }else if (isEmpty){
+                oops.visibility = View.VISIBLE
+            }
+        }
+        else {
+            oops.visibility = View.VISIBLE
+        }
 
         viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            forSearch = it
+            gotFromApi = it
         })
-        viewModel.sayHello(shimmerFrameLayout, recyclerView, view, receiveNewsModel,swipeRefreshLayout, oops)
-        viewModel.giveList(forSearch)
     }
 
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
+        val DetailFragment = DetailFragment.newInstance(gotFromApi[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
@@ -99,15 +132,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     override fun onSearch(text: String) {
         Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
         viewModel.fetchSearch(text)
-        viewModel.giveList(forSearch)
-    }
-
-    companion object {
-        fun newInstance(newsModel: NewsModel): NewsFragment {
-            val fragment = NewsFragment()
-            fragment.receiveNewsModel = newsModel
-            return fragment
-        }
+        viewModel.giveList(gotFromApi)
     }
 
     override fun onLongClick(v: View?): Boolean {
@@ -117,12 +142,12 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     fun basicAlert(view: View){
         val negativeButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel2.addReadLaterList(forSearch[itemView])
+            viewModel2.addReadLaterList(gotFromApi[itemView])
             Toast.makeText(requireContext(), "Added to Read Later", Toast.LENGTH_SHORT).show()
         }
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel2.addFavoritesList(forSearch[itemView])
+            viewModel2.addFavoritesList(gotFromApi[itemView])
             Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
         }
         val neutralButtonClick = { dialog: DialogInterface, which: Int ->
@@ -139,6 +164,30 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             setNegativeButton("Read Later", negativeButtonClick)
             setNeutralButton("Cancel", neutralButtonClick)
             show()
+        }
+    }
+    private fun isOnline(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val n = cm.activeNetwork
+            if (n != null) {
+                val nc = cm.getNetworkCapabilities(n)
+                return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                        nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+            }
+            return false
+        } else {
+            val netInfo = cm.activeNetworkInfo
+            return netInfo != null && netInfo.isConnectedOrConnecting
+        }
+    }
+
+    companion object {
+        fun newInstance(newsModel: NewsModel): NewsFragment {
+            val fragment = NewsFragment()
+            fragment.receiveNewsModel = newsModel
+            return fragment
         }
     }
 }

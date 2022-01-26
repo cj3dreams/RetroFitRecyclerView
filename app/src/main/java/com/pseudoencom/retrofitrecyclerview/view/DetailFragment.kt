@@ -17,6 +17,7 @@ import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
+import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
@@ -33,7 +34,7 @@ class DetailFragment : Fragment(), View.OnClickListener {
 
 
     private val retrofitService = ApiInterface.create()
-    private lateinit var idFrom: Article
+    private lateinit var idFrom: ArticlesEntity
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -78,7 +79,7 @@ class DetailFragment : Fragment(), View.OnClickListener {
     }
 
     companion object {
-        fun newInstance(sayMeIdMotherFucker: Article): DetailFragment {
+        fun newInstance(sayMeIdMotherFucker: ArticlesEntity): DetailFragment {
             val fragment = DetailFragment()
             fragment.idFrom = sayMeIdMotherFucker
             return fragment

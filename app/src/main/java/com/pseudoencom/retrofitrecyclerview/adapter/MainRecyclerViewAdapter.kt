@@ -15,11 +15,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.pseudoencom.retrofitrecyclerview.R
+import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 import com.pseudoencom.retrofitrecyclerview.model.Article
 import com.pseudoencom.retrofitrecyclerview.view.NewsFragment
 import kotlin.math.sqrt
 
-class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>, val onClickListener: View.OnClickListener, val onLongClickListener: View.OnLongClickListener)
+class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<ArticlesEntity>, val onClickListener: View.OnClickListener, val onLongClickListener: View.OnLongClickListener)
     : RecyclerView.Adapter<MainRecyclerViewAdapter.MyViewHolder>() {
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -61,7 +62,7 @@ class MainRecyclerViewAdapter(val context: Context, var myDataSet:List<Article>,
         val itemData = myDataSet[position]
         holder.nameOfNews.text = itemData.title
         holder.descrip.text = itemData.description.trim().replace("\n","")
-        holder.brandName.text = " " + itemData.source.name + " "
+        holder.brandName.text = " " + itemData.source + " "
         holder.timeRelease.text = " " +   itemData.publishedAt.substring(0,10) + " "
         loadImage(context,holder.imageViewOfNews, itemData.urlToImage)
         try {

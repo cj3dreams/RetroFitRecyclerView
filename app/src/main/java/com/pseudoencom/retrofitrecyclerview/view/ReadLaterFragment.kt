@@ -22,7 +22,7 @@ import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
-import com.pseudoencom.retrofitrecyclerview.model.Article
+import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
 import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
@@ -36,7 +36,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
 
 
     private val retrofitService = ApiInterface.create()
-    var forSearch: MutableList<Article> = mutableListOf()
+    var gotFromApi: MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,7 +68,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         viewModel.getReadLater().observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            forSearch = it
+            gotFromApi = it
 
             if (adapter.itemCount == 0){
                 recyclerView.visibility = View.GONE
@@ -80,13 +80,13 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
             }
         })
         viewModel.fetchReadLater()
-        viewModel.giveList(forSearch)
+        viewModel.giveList(gotFromApi)
 
     }
 
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(forSearch[itemView])
+        val DetailFragment = DetailFragment.newInstance(gotFromApi[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
@@ -101,7 +101,7 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel.removeFromReadLaterList(forSearch[itemView])
+            viewModel.removeFromReadLaterList(gotFromApi[itemView])
             Handler().postDelayed({
                 swipeRefreshLayout.post {
                     onRefresh()

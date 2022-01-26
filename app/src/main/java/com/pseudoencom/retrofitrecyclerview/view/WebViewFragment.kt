@@ -14,6 +14,7 @@ import androidx.core.os.HandlerCompat.postDelayed
 import com.pseudoencom.retrofitrecyclerview.MainActivity
 import com.pseudoencom.retrofitrecyclerview.R
 import android.webkit.WebChromeClient
+import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -41,14 +42,18 @@ class WebViewFragment : Fragment() {
 
         progressBar = view.findViewById(R.id.webViewLoading)
         webView = view.findViewById(R.id.webView)
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, progress: Int) {
-                if (progress in 1..10) Snackbar.make(view, "Started loading page . . .", 2000).show()
-                else if (progress in 25..35) Snackbar.make(view, "Loading page $progress%", 2000).show()
-                else if (progress in 55..65) Snackbar.make(view, "Loading page $progress%", 2000).show()
-                else if (progress in 75..85) Snackbar.make(view, "Loading page $progress%", 2000).show()
-                else if (progress in 90..100) Snackbar.make(view, "Loading page $progress%", 2000).show()
-                if (progress >= 68) progressBar.visibility = View.GONE
+        if (webView.isVisible) {
+            webView.webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView, progress: Int) {
+                    when (progress) {
+                        in 1..10 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Started loading page . . .", 1500).show() }
+                        in 25..35 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Loading page $progress%", 1500).show()}
+                        in 55..65 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Loading page $progress%", 1500).show()}
+                        in 75..85 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Loading page $progress%", 1500).show()}
+                        in 90..100 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Loading page $progress%", 1500).show()}
+                    }
+                    if (progress >= 68) progressBar.visibility = View.GONE
+                }
             }
         }
         webView.settings.javaScriptEnabled = true
@@ -64,6 +69,7 @@ class WebViewFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        webView.isEnabled = false
         var activity = activity as MainActivity
         activity.toolbar.visibility = View.VISIBLE
     }

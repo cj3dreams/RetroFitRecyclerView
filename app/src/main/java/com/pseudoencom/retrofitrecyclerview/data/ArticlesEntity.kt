@@ -10,7 +10,7 @@ data class ArticlesEntity (
     @ColumnInfo(name ="id")
     var id: Int = 0,
     @ColumnInfo(name = "author")
-    val author: String,
+    val author: Int,
     @ColumnInfo(name = "content")
     val content: String,
     @ColumnInfo(name = "description")
@@ -24,5 +24,11 @@ data class ArticlesEntity (
     @ColumnInfo(name = "url")
     val url: String,
     @ColumnInfo(name = "urlToImage")
-    val urlToImage: String
+    val urlToImage: String,
+    @ColumnInfo(name = "tabName")
+    var tabName: String,
+    @ColumnInfo(name  = "isFavorite")
+    var isFavorite: Int,
+    @ColumnInfo(name = "isReadLater")
+    var isReadLater: Int
         )

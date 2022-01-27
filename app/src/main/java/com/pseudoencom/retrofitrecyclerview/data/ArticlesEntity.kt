@@ -24,7 +24,7 @@ data class ArticlesEntity (
     @ColumnInfo(name = "url")
     val url: String,
     @ColumnInfo(name = "urlToImage")
-    val urlToImage: String,
+    val urlToImage: String?,
     @ColumnInfo(name = "tabName")
     var tabName: String,
     @ColumnInfo(name  = "isFavorite")

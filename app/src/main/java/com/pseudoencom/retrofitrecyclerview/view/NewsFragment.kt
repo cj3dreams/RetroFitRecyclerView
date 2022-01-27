@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.OnSearchListener
@@ -58,6 +59,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_news,container,false)
+        roomViewModel.alwaysKnowNewsModel(receiveNewsModel)
         recyclerView = view.findViewById(R.id.rrView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         oops = view.findViewById(R.id.oops)
@@ -83,12 +85,12 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             viewModel.getDataFromApi(receiveNewsModel)
             viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
                 gotFromApi = it
-                roomViewModel.setNewsToDb(gotFromApi)
+                roomViewModel.setNewsToDb(gotFromApi, receiveNewsModel)
                 roomViewModel.getAllNewsObservers().observe(viewLifecycleOwner, Observer {
-                    adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
-                    recyclerView.adapter = adapter
-                    adapter.notifyDataSetChanged()
-                    viewModel.giveList(it.toMutableList())
+                        adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                        recyclerView.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        viewModel.giveList(it.toMutableList())
                 })
             })
             recyclerView.visibility = View.VISIBLE
@@ -96,6 +98,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             swipeRefreshLayout.isRefreshing = false
         }else if(!isOnline){
             val isEmpty = roomViewModel.isEmpty()
+            Snackbar.make(view, "$isEmpty", 1500).show()
             if(!isEmpty){
                 roomViewModel.getAllNewsObservers().observe(viewLifecycleOwner, Observer {
                     adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
@@ -103,7 +106,13 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
                     adapter.notifyDataSetChanged()
                     viewModel.giveList(it.toMutableList())
                 })
+                recyclerView.visibility = View.VISIBLE
+                shimmerFrameLayout.stopShimmer()
+                swipeRefreshLayout.isRefreshing = false
             }else if (isEmpty){
+                swipeRefreshLayout.isRefreshing = false
+                shimmerFrameLayout.stopShimmer()
+                shimmerFrameLayout.visibility = View.INVISIBLE
                 oops.visibility = View.VISIBLE
             }
         }

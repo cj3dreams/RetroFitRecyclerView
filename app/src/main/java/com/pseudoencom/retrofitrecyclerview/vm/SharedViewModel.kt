@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -12,6 +13,8 @@ import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 import com.pseudoencom.retrofitrecyclerview.model.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,7 +67,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
     }
 
     fun getDataFromApi(receiveNewsModel: NewsModel){
-
+//        viewModelScope.launch(Dispatchers.IO){
         val response = repository.getAllData(receiveNewsModel)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
@@ -79,8 +82,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
                             responseData[i].publishedAt,
                             responseData[i].source.name,
                             responseData[i].title,
-                            responseData[i].url,
-                            "https://www.reuters.com/resizer/fJFkekJW137EJppxumHfEwAXJac=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/X2HY7W5EBRMPVKEDFTONJBJ7YA.jpg",
+                            responseData[i].url, responseData[i].urlToImage,
                             receiveNewsModel.code, 0, 0)))
                         }
                     mutableLiveData.postValue(mutableList)
@@ -95,6 +97,7 @@ class SharedViewModel constructor(private val repository: MainRepository)  : Vie
 //                    oops.visibility = View.VISIBLE
             }
         })
+//        }
     }
     fun searchNews(search: String): MutableList<ArticlesEntity> {
         val listForSeacrh: MutableList<ArticlesEntity> = mutableListOf()

@@ -1,6 +1,5 @@
 package com.pseudoencom.retrofitrecyclerview.data
 
-import ArticlesDao
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room

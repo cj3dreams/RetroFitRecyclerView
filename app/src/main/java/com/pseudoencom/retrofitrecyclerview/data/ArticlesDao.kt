@@ -1,5 +1,6 @@
+package com.pseudoencom.retrofitrecyclerview.data
+
 import androidx.room.*
-import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
 
 @Dao
 interface ArticlesDao {

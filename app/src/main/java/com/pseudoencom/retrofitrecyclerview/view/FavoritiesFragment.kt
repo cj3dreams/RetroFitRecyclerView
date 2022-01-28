@@ -19,19 +19,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainActivity
-import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
 import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
-import com.pseudoencom.retrofitrecyclerview.model.Article
+import com.pseudoencom.retrofitrecyclerview.data.RoomViewModel
 import com.pseudoencom.retrofitrecyclerview.model.NewsModel
-import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
-import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
 
 class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: SharedViewModel
+    private lateinit var roomViewModel: RoomViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -39,11 +36,11 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
 
 
     private val retrofitService = ApiInterface.create()
-    var gorFromApi  : MutableList<ArticlesEntity> = mutableListOf()
+    var gotFromFavorite  : MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = ViewModelProvider(requireActivity(), MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
+        roomViewModel = ViewModelProvider(requireActivity()).get(RoomViewModel::class.java)
 
     }
 
@@ -68,10 +65,11 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getFavorites().observe(viewLifecycleOwner, Observer {
+        roomViewModel.getAllNewsObservers(NewsModel
+            ("isFavorite","isFavorite","isFavorite"))?.observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            gorFromApi = it
+            gotFromFavorite = it.toMutableList()
             if (adapter.itemCount == 0){
                 recyclerView.visibility = View.GONE
                 oops.visibility = View.VISIBLE
@@ -81,13 +79,11 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
                 oops.visibility = View.GONE
             }
         })
-        viewModel.fetchFavorites()
-        viewModel.giveList(gorFromApi)
     }
 
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(gorFromApi[itemView])
+        val DetailFragment = DetailFragment.newInstance(gotFromFavorite[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
      setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
@@ -102,7 +98,8 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel.removeFromFavoritesList(gorFromApi[itemView])
+            roomViewModel.deleteNews(gotFromFavorite[itemView],
+                NewsModel("isFavorite","isFavorite","isFavorite"))
             Handler().postDelayed({
                 swipeRefreshLayout.post {
                     onRefresh()

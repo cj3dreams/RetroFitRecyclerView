@@ -19,16 +19,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.pseudoencom.retrofitrecyclerview.ApiInterface
 import com.pseudoencom.retrofitrecyclerview.MainActivity
-import com.pseudoencom.retrofitrecyclerview.MainRepository
 import com.pseudoencom.retrofitrecyclerview.R
 import com.pseudoencom.retrofitrecyclerview.adapter.MainRecyclerViewAdapter
 import com.pseudoencom.retrofitrecyclerview.data.ArticlesEntity
-import com.pseudoencom.retrofitrecyclerview.vm.MyViewModelFactory
-import com.pseudoencom.retrofitrecyclerview.vm.SharedViewModel
+import com.pseudoencom.retrofitrecyclerview.data.RoomViewModel
+import com.pseudoencom.retrofitrecyclerview.model.NewsModel
 
 class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, SwipeRefreshLayout.OnRefreshListener {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: SharedViewModel
+    private lateinit var roomViewModel: RoomViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -36,12 +35,11 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
 
 
     private val retrofitService = ApiInterface.create()
-    var gotFromApi: MutableList<ArticlesEntity> = mutableListOf()
+    var gotFromReadLater: MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = ViewModelProvider(requireActivity(), MyViewModelFactory(MainRepository(retrofitService))).get(SharedViewModel::class.java)
-
+        roomViewModel = ViewModelProvider(requireActivity()).get(RoomViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -65,10 +63,11 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getReadLater().observe(viewLifecycleOwner, Observer {
+        roomViewModel.getAllNewsObservers(NewsModel
+            ("isReadLater","isReadLater","isReadLater"))?.observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            gotFromApi = it
+            gotFromReadLater = it.toMutableList()
 
             if (adapter.itemCount == 0){
                 recyclerView.visibility = View.GONE
@@ -79,14 +78,11 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
                 oops.visibility = View.GONE
             }
         })
-        viewModel.fetchReadLater()
-        viewModel.giveList(gotFromApi)
-
     }
 
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(gotFromApi[itemView])
+        val DetailFragment = DetailFragment.newInstance(gotFromReadLater[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
@@ -101,7 +97,8 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
     fun basicAlert(view: View){
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel.removeFromReadLaterList(gotFromApi[itemView])
+            roomViewModel.deleteNews(gotFromReadLater[itemView],
+                NewsModel("isReadLater","isReadLater","isReadLater"))
             Handler().postDelayed({
                 swipeRefreshLayout.post {
                     onRefresh()

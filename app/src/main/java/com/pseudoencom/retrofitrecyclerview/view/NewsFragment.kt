@@ -45,6 +45,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
 
     private val retrofitService = ApiInterface.create()
     var gotFromApi: MutableList<ArticlesEntity> = mutableListOf()
+    var gotFromDB: MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,38 +60,39 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_news,container,false)
-        roomViewModel.alwaysKnowNewsModel(receiveNewsModel)
         recyclerView = view.findViewById(R.id.rrView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         oops = view.findViewById(R.id.oops)
         shimmerFrameLayout = view.findViewById(R.id.shimmer)
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
-        swipeRefreshLayout.setOnRefreshListener{
-            viewModel.getDataFromApi(receiveNewsModel)
+        swipeRefreshLayout.setOnRefreshListener {
+            //TODO Refresh
         }
         swipeRefreshLayout.setColorSchemeResources(
-            R.color.purple_200,
+            R.color.purple_300,
             R.color.purple_500,
             R.color.purple_700,
-            R.color.teal_700)
+            R.color.purple_700
+        )
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var isOnline = isOnline(requireContext())
+        val isOnline = isOnline(requireContext())
         shimmerFrameLayout.visibility = View.VISIBLE
         oops.visibility = View.INVISIBLE
         if(isOnline) {
             viewModel.getDataFromApi(receiveNewsModel)
             viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
                 gotFromApi = it
-                roomViewModel.setNewsToDb(gotFromApi, receiveNewsModel)
-                roomViewModel.getAllNewsObservers().observe(viewLifecycleOwner, Observer {
-                        adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
-                        recyclerView.adapter = adapter
-                        adapter.notifyDataSetChanged()
-                        viewModel.giveList(it.toMutableList())
+                roomViewModel.setToDB(it, receiveNewsModel)
+                roomViewModel.getAllNewsObservers(receiveNewsModel)?.observe(viewLifecycleOwner, Observer {
+                    adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                    recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                    gotFromDB = it.toMutableList()
+                    viewModel.giveList(it.toMutableList())
                 })
             })
             recyclerView.visibility = View.VISIBLE
@@ -98,12 +100,12 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             swipeRefreshLayout.isRefreshing = false
         }else if(!isOnline){
             val isEmpty = roomViewModel.isEmpty()
-            Snackbar.make(view, "$isEmpty", 1500).show()
             if(!isEmpty){
-                roomViewModel.getAllNewsObservers().observe(viewLifecycleOwner, Observer {
+                roomViewModel.getAllNewsObservers(receiveNewsModel)?.observe(viewLifecycleOwner, Observer {
                     adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
                     recyclerView.adapter = adapter
                     adapter.notifyDataSetChanged()
+                    gotFromDB = it.toMutableList()
                     viewModel.giveList(it.toMutableList())
                 })
                 recyclerView.visibility = View.VISIBLE
@@ -116,20 +118,15 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
                 oops.visibility = View.VISIBLE
             }
         }
-        else {
-            oops.visibility = View.VISIBLE
-        }
-
         viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
             adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
             recyclerView.adapter = adapter
-            gotFromApi = it
         })
     }
 
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
-        val DetailFragment = DetailFragment.newInstance(gotFromApi[itemView])
+        val DetailFragment = DetailFragment.newInstance(gotFromDB[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
@@ -141,7 +138,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     override fun onSearch(text: String) {
         Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
         viewModel.fetchSearch(text)
-        viewModel.giveList(gotFromApi)
+        viewModel.giveList(gotFromDB)
     }
 
     override fun onLongClick(v: View?): Boolean {
@@ -151,12 +148,34 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     fun basicAlert(view: View){
         val negativeButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel2.addReadLaterList(gotFromApi[itemView])
+            roomViewModel.insertNews(
+                ArticlesEntity(0,
+                    gotFromDB[itemView].author,
+                    gotFromDB[itemView].content,
+                    gotFromDB[itemView].description,
+                    gotFromDB[itemView].publishedAt,
+                    gotFromDB[itemView].source,
+                    gotFromDB[itemView].title,
+                    gotFromDB[itemView].url,
+                    gotFromDB[itemView].urlToImage,
+                    gotFromDB[itemView].tabName,0,1),
+                NewsModel("isReadLater","isReadLater","isReadLater"))
             Toast.makeText(requireContext(), "Added to Read Later", Toast.LENGTH_SHORT).show()
         }
         val positiveButtonClick = { dialog: DialogInterface, which: Int ->
             val itemView = view?.tag as Int
-            viewModel2.addFavoritesList(gotFromApi[itemView])
+            roomViewModel.insertNews(
+                ArticlesEntity(0,
+                    gotFromDB[itemView].author,
+                    gotFromDB[itemView].content,
+                    gotFromDB[itemView].description,
+                    gotFromDB[itemView].publishedAt,
+                    gotFromDB[itemView].source,
+                    gotFromDB[itemView].title,
+                    gotFromDB[itemView].url,
+                    gotFromDB[itemView].urlToImage,
+                    gotFromDB[itemView].tabName,1,0),
+                NewsModel("isFavorite","isFavorite","isFavorite"))
             Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
         }
         val neutralButtonClick = { dialog: DialogInterface, which: Int ->
@@ -199,4 +218,5 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             return fragment
         }
     }
+
 }

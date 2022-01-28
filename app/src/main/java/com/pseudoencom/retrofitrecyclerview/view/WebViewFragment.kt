@@ -52,7 +52,7 @@ class WebViewFragment : Fragment() {
                         in 75..85 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Loading page $progress%", 1500).show()}
                         in 90..100 -> this@WebViewFragment.view?.let { Snackbar.make(it, "Loading page $progress%", 1500).show()}
                     }
-                    if (progress >= 68) progressBar.visibility = View.GONE
+                    if (progress >= 75) progressBar.visibility = View.GONE
                 }
             }
         }

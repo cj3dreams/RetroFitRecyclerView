@@ -3,67 +3,166 @@ package com.pseudoencom.retrofitrecyclerview.data
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.pseudoencom.retrofitrecyclerview.model.NewsModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class RoomViewModel(app: Application): AndroidViewModel(app) {
-    var alwaysKnowNewsModelVariable: NewsModel = NewsModel("","","")
     var allArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
-    var specialArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var appleArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var amazonArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var facebookArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var googleArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var jetbrainsArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var microsoftArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var teslaArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var readLaterArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
+    var favoritesArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
 
-    fun setNewsToDb(mutableList: MutableList<ArticlesEntity>, newsModel: NewsModel){
-        if (mutableList.size != 0) {
-            for (i in 0 until mutableList.size){
-                if (mutableList[i].tabName == newsModel.code)
-                insertNews(mutableList[i])
-            }
-        }
+
+    fun setToDB(gotFromApi: MutableList<ArticlesEntity>, newsModel: NewsModel) {
+           viewModelScope.launch(Dispatchers.IO) {
+               val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
+               val list = articlesDao?.getArticles()
+               for (i in 0 until gotFromApi.size) {
+                   if (!list!!.contains(gotFromApi[i])) {
+                       insertNews(gotFromApi[i], newsModel)
+                   }
+               }
+           }
     }
 
-    fun getAllSpecialArticles(): MutableLiveData<List<ArticlesEntity>>{
-        return specialArticles
-    }
-
-    fun getAllSpecialNews(){
+    fun getAllSpecialNews(newsModel: NewsModel){
         val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
         val list = articlesDao?.getArticles()
-        val newList = mutableListOf<ArticlesEntity>()
-        if (list != null) {
-            for (i in 0 until list.size){
-                if (list[i].tabName == alwaysKnowNewsModelVariable.code){
-                    newList.add(list[i])
+        viewModelScope.launch(Dispatchers.IO) {
+            when (newsModel.code) {
+                "Technology" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Technology" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    allArticles.postValue(mutableList)
+                }
+                "Apple" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Apple" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    appleArticles.postValue(mutableList)
+                }
+                "Amazon" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Amazon" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    amazonArticles.postValue(mutableList)
+                }
+                "Facebook" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Facebook" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    facebookArticles.postValue(mutableList)
+                }
+                "Google" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Google" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    googleArticles.postValue(mutableList)
+                }
+                "Jetbrains" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Jetbrains" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    jetbrainsArticles.postValue(mutableList)
+                }
+                "Microsoft" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Microsoft" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    microsoftArticles.postValue(mutableList)
+                }
+                "Tesla" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].tabName == "Tesla" && list[i].isFavorite == 0 && list[i].isReadLater == 0) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    teslaArticles.postValue(mutableList)
+                }
+                "isReadLater" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].isReadLater == 1) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    readLaterArticles.postValue(mutableList)
+                }
+                "isFavorite" -> {
+                    val mutableList: MutableList<ArticlesEntity> = mutableListOf()
+                    for (i in 0 until list!!.size) {
+                        if (list[i].isFavorite == 1) {
+                            mutableList.add(list[i])
+                        }
+                    }
+                    favoritesArticles.postValue(mutableList)
                 }
             }
         }
-        allArticles.postValue(newList)
     }
 
-    fun getAllNewsObservers(): MutableLiveData<List<ArticlesEntity>>{
-        return allArticles
+    fun getAllNewsObservers(newsModel: NewsModel): MutableLiveData<List<ArticlesEntity>>?{
+        getAllSpecialNews(newsModel)
+         return when(newsModel.code) {
+            "Technology" -> allArticles
+            "Apple" -> appleArticles
+            "Amazon" -> amazonArticles
+            "Facebook" -> facebookArticles
+            "Google" -> googleArticles
+            "Jetbrains" -> jetbrainsArticles
+            "Microsoft" -> microsoftArticles
+            "Tesla" -> teslaArticles
+             "isReadLater" -> readLaterArticles
+             "isFavorite" -> favoritesArticles
+            else -> null
+        }
     }
 
-    fun getAllNews(){
-        val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
-        val list = articlesDao?.getArticles()
-        allArticles.postValue(list!!)
-    }
-
-    fun insertNews(entity: ArticlesEntity){
+    fun insertNews(entity: ArticlesEntity, newsModel: NewsModel){
         val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
         articlesDao?.insert(entity)
-        getAllNews()
+        getAllSpecialNews(newsModel)
     }
-    fun deleteNews(entity: ArticlesEntity){
+    fun deleteNews(entity: ArticlesEntity, newsModel: NewsModel){
         val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
         articlesDao?.delete(entity)
-        getAllNews()
+        getAllSpecialNews(newsModel)
     }
     fun isEmpty(): Boolean{
         val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
         val list = articlesDao?.getArticles()
         return list!!.size == 0
-    }
-
-    fun alwaysKnowNewsModel(newsModel: NewsModel){
-        alwaysKnowNewsModelVariable = newsModel
     }
 }

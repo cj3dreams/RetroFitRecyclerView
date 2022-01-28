@@ -8,7 +8,7 @@ interface ArticlesDao {
     @Query("SELECT * FROM articles ORDER BY id DESC")
     fun getArticles(): List<ArticlesEntity>?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(article: ArticlesEntity?)
 
     @Delete

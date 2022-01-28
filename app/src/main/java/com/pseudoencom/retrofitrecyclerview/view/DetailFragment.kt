@@ -31,8 +31,6 @@ class DetailFragment : Fragment(), View.OnClickListener {
     private lateinit var imageView: ImageView
     private lateinit var viewModel: SharedViewModel
     private lateinit var getUrl: String
-
-
     private val retrofitService = ApiInterface.create()
     private lateinit var idFrom: ArticlesEntity
 
@@ -61,7 +59,7 @@ class DetailFragment : Fragment(), View.OnClickListener {
         textView2.text = idFrom.description + "\n" +
                 idFrom.publishedAt
                 loadImage(context,imageView, idFrom.urlToImage)
-        getUrl = idFrom.url
+        getUrl = idFrom?.url.toString()
         textView3.text = "...read more"
 
     }

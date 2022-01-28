@@ -14,15 +14,15 @@ data class ArticlesEntity (
     @ColumnInfo(name = "content")
     val content: String,
     @ColumnInfo(name = "description")
-    val description: String,
+    val description: String?,
     @ColumnInfo(name = "publishedAt")
-    val publishedAt: String,
+    val publishedAt: String?,
     @ColumnInfo(name = "source")
     val source: String,
     @ColumnInfo(name = "title")
-    val title: String,
+    val title: String?,
     @ColumnInfo(name = "url")
-    val url: String,
+    val url: String?,
     @ColumnInfo(name = "urlToImage")
     val urlToImage: String?,
     @ColumnInfo(name = "tabName")

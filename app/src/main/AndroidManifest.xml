@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pseudoencom.retrofitrecyclerview">
+    package="com.pseudoencom.newsapp">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,14 +12,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RetroFitRecyclerView">
+        android:theme="@style/Theme.NewsApp">
         <activity
-            android:name=".MainActivity"
+            android:name="com.pseudoencom.newsapp.MainActivity"
             android:configChanges = "orientation"
             android:screenOrientation = "portrait"
             android:exported="true"/>
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="com.pseudoencom.newsapp.SplashScreenActivity"
             android:exported="true"
             android:theme="@style/LightThemeTransparentStatusBar">
             <intent-filter>

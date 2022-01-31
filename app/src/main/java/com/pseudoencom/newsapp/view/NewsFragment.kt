@@ -86,7 +86,6 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         oops.visibility = View.INVISIBLE
         if(isOnline) {
             viewModel.getDataFromApi(receiveNewsModel).observe(viewLifecycleOwner, Observer {
-                Snackbar.make(requireView(),it.toString(),1500).show()
                 if (it) {
                     isAllDownloaded = it.toString()
                 }
@@ -146,9 +145,9 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         val itemView = v?.tag as Int
         val DetailFragment = DetailFragment.newInstance(gotFromDB[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
+            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
-            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
                 .commit()
         }
     }
@@ -236,5 +235,4 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             return fragment
         }
     }
-
 }

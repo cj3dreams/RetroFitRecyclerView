@@ -23,7 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.pseudoencom.newsapp.view.*
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
-    private lateinit var bottomNavigationView: BottomNavigationView
+    lateinit var bottomNavigationView: BottomNavigationView
     lateinit var search: SearchView
     lateinit var backButton: Button
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     private fun changerOfFrg(fragment: Fragment) {
+        supportFragmentManager.popBackStackImmediate()
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.frgChanger, fragment)
                 .commit()

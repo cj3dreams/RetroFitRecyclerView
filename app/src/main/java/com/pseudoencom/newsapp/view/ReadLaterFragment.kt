@@ -133,11 +133,15 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         act.backButton.visibility = View.GONE
         act.toolbar.elevation = 7F
         act.search.visibility = View.INVISIBLE
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            commit()
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
         val act = activity as MainActivity
         act.search.visibility = View.VISIBLE
+
     }
     override fun onDestroyView() {
         super.onDestroyView()

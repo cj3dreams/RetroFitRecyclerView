@@ -65,9 +65,7 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                             }
                         } else {
                             mutableList.add(
-                                ArticlesEntity(
-                                    0,
-                                    0,
+                                ArticlesEntity(0, 0,
                                     "Api Token Time Ended",
                                     "Remove App Please and Type me telegram @cj3dreams",
                                     "Api Token Time Ended",
@@ -76,36 +74,14 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                                     "Api Token Time Ended",
                                     "Api Token Time Ended",
                                     "Api Token Time Ended",
-                                    0,
-                                    0
-                                )
-                            )
+                                    0, 0))
                         }
                         mutableLiveData.postValue(mutableList)
                     isApiDownloadedAll.postValue(true)
                 }
             }
-
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
-                val mutableList = mutableListOf<ArticlesEntity>()
-                mutableList.add(
-                    ArticlesEntity(
-                        0,
-                        0,
-                        "OnFailure",
-                        "Remove App Please and Type me telegram @cj3dreams",
-                        "Api Token Time Ended",
-                        "Api Token Time Ended",
-                        "Api Token Time Ended",
-                        "Api Token Time Ended",
-                        "Api Token Time Ended",
-                        "Api Token Time Ended",
-                        0,
-                        0
-                    )
-                )
-            mutableLiveData.postValue(mutableList)
-            isApiDownloadedAll.postValue(true)
+
             }
         })
         return isApiDownloadedAll

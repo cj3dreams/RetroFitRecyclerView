@@ -81,11 +81,8 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             textViewLog.text = "Log In"
             textViewLog.setOnClickListener {
                 act.signInWithGoogle()
-                Toast.makeText(requireContext(), "Log In Successes", Toast.LENGTH_SHORT).show()
             }
-            if(act.auth.currentUser != null) onRefresh()
         }
-
     }
 
     override fun onClick(v: View?) {

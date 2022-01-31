@@ -117,7 +117,11 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         val credential = GoogleAuthProvider.getCredential(token, null)
         auth.signInWithCredential(credential).addOnCompleteListener {
             if(it.isSuccessful){
-                idToken = "done"
+                Toast.makeText(this, "Log In Successes", Toast.LENGTH_SHORT).show()
+                supportFragmentManager?.beginTransaction()?.apply {
+                    replace(R.id.frgChanger, ProfileFragment())
+                    commit()
+                }
             }else if (it.isCanceled){
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
             }else {

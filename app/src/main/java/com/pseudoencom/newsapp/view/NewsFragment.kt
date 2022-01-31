@@ -145,7 +145,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         val itemView = v?.tag as Int
         val DetailFragment = DetailFragment.newInstance(gotFromDB[itemView])
         activity?.supportFragmentManager?.beginTransaction()?.apply {
-            setCustomAnimations(R.anim.slide_up,R.anim.slide_out_right)
+            setCustomAnimations(R.anim.blink,R.anim.blink,R.anim.blink,R.anim.blink)
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
                 .commit()
@@ -153,7 +153,6 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     }
 
     override fun onSearch(text: String) {
-        Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
         viewModel.fetchSearch(text)
         viewModel.giveList(gotFromDB)
     }

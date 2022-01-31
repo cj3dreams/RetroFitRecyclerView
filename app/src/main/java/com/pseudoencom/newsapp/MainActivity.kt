@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     private var listener:OnSearchListener? = null
     lateinit var launcher: ActivityResultLauncher<Intent>
     lateinit var auth: FirebaseAuth
+    lateinit var idToken: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                 val account = task.getResult(ApiException::class.java)
                 if (account != null){
                     fireBaseAuthWithGoogle(account.idToken!!)
+                    idToken = account.idToken!!
                 }
             }catch (e: ApiException){
                 Log.d("myTag", "Error Api Exepction")
@@ -79,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
             }
             R.id.readLater -> changerOfFrg(ReadLaterFragment())
             R.id.favorites -> changerOfFrg(FavoritiesFragment())
-            R.id.profile -> {changerOfFrg(ProfileFragment()); signInWithGoogle()}
+            R.id.profile -> changerOfFrg(ProfileFragment())
         }
         return true
     }
@@ -87,6 +90,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     private fun changerOfFrg(fragment: Fragment) {
         supportFragmentManager.popBackStackImmediate()
         supportFragmentManager.beginTransaction().apply {
+            setCustomAnimations(R.anim.blink,0)
             replace(R.id.frgChanger, fragment)
                 .commit()
         }
@@ -113,11 +117,11 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         val credential = GoogleAuthProvider.getCredential(token, null)
         auth.signInWithCredential(credential).addOnCompleteListener {
             if(it.isSuccessful){
-
+                idToken = "done"
             }else if (it.isCanceled){
-
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
             }else {
-                ///
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
             }
         }
     }

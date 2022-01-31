@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -144,8 +145,9 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     override fun onClick(v: View?) {
         val itemView = v?.tag as Int
         val DetailFragment = DetailFragment.newInstance(gotFromDB[itemView])
+
         activity?.supportFragmentManager?.beginTransaction()?.apply {
-            setCustomAnimations(R.anim.blink,R.anim.blink,R.anim.blink,R.anim.blink)
+            setCustomAnimations(R.anim.blink,0)
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
                 .commit()

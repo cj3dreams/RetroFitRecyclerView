@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ArticlesEntity::class], version = 1, exportSchema = false)
+@Database(entities = [ArticlesEntity::class, ApiTokenEntity::class], version = 1, exportSchema = false)
 abstract class RoomAppDb: RoomDatabase() {
 
     abstract fun articlesDao(): ArticlesDao?
+    abstract fun apiTokenDao(): ApiTokenDao?
 
     companion object{
         private var INSTANCE: RoomAppDb? = null

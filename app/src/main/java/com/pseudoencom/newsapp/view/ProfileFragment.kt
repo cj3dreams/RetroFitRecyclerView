@@ -23,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.pseudoencom.newsapp.MainActivity
 import com.pseudoencom.newsapp.R
+import com.pseudoencom.newsapp.data.ApiTokenEntity
+import com.pseudoencom.newsapp.data.RoomViewModel
 import com.pseudoencom.newsapp.model.ProfileModel
 import com.pseudoencom.newsapp.vm.SharedViewModel
 
@@ -31,6 +33,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: ProfileAdapter
     lateinit var viewModel: SharedViewModel
+    lateinit var roomViewModel: RoomViewModel
     lateinit var imageViewAvatar: ImageView
     lateinit var textViewName: TextView
     lateinit var textViewLog: TextView
@@ -39,6 +42,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        roomViewModel = ViewModelProvider(requireActivity()).get(RoomViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -129,11 +133,13 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         builder.setPositiveButton(
             "OK",
             DialogInterface.OnClickListener { dialog, which ->  var m_Text = input.text.toString()
+                roomViewModel.insertApiToken(ApiTokenEntity(0,m_Text))
             })
         if (showCancel) {
             builder.setNegativeButton(
                 "Cancel",
-                DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+                DialogInterface.OnClickListener { dialog, which -> dialog.cancel()
+                })
         }
         if (!showCancel){
             builder.setMessage(ifShowCancel)

@@ -26,6 +26,7 @@ import com.pseudoencom.newsapp.MainRepository
 import com.pseudoencom.newsapp.OnSearchListener
 import com.pseudoencom.newsapp.R
 import com.pseudoencom.newsapp.adapter.MainRecyclerViewAdapter
+import com.pseudoencom.newsapp.data.ApiTokenEntity
 import com.pseudoencom.newsapp.data.ArticlesEntity
 import com.pseudoencom.newsapp.data.RoomViewModel
 import com.pseudoencom.newsapp.model.NewsModel
@@ -49,6 +50,7 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     private val retrofitService = ApiInterface.create()
     var gotFromApi: MutableList<ArticlesEntity> = mutableListOf()
     var gotFromDB: MutableList<ArticlesEntity> = mutableListOf()
+    var apiTokenList: List<ApiTokenEntity> = listOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,13 +65,76 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_news,container,false)
+
         recyclerView = view.findViewById(R.id.rrView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         oops = view.findViewById(R.id.oops)
         shimmerFrameLayout = view.findViewById(R.id.shimmer)
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
         swipeRefreshLayout.setOnRefreshListener {
-            //TODO Refresh
+            recyclerView.visibility = View.INVISIBLE
+            val isOnline = isOnline(requireContext())
+            if(isOnline) {
+                val isEmptyToken = roomViewModel.isEmptyToken()
+                if (!isEmptyToken){
+                    roomViewModel.getObserversApiToken().observe(viewLifecycleOwner, Observer {
+                        apiTokenList = it
+                        viewModel.getDataFromApi(receiveNewsModel, apiTokenList).observe(viewLifecycleOwner, Observer {
+                            if (it) {
+                                isAllDownloaded = it.toString()
+                            }
+                        })
+                    })
+                }
+                viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
+                    gotFromApi = it
+                    roomViewModel.setToDB(it, receiveNewsModel).observe(viewLifecycleOwner, Observer {
+                        isAllUploaded = it.toString()
+                        if(isAllUploaded == "true") {
+                            roomViewModel.getAllNewsObserversBoolean(receiveNewsModel).observe(viewLifecycleOwner, Observer {
+                                if (it) {
+                                    isAllUploaded = it.toString()
+                                    if (isAllUploaded == "true" && isAllDownloaded == "true"){
+                                        recyclerView.visibility = View.VISIBLE
+                                        shimmerFrameLayout.stopShimmer()
+                                        swipeRefreshLayout.isRefreshing = false
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    roomViewModel.getAllNewsObservers(receiveNewsModel)?.observe(viewLifecycleOwner, Observer {
+                        adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                        recyclerView.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        gotFromDB = it.toMutableList()
+                        viewModel.giveList(it.toMutableList())
+                    })
+                })
+            }else if(!isOnline){
+                val isEmpty = roomViewModel.isEmpty()
+                if(!isEmpty){
+                    roomViewModel.getAllNewsObservers(receiveNewsModel)?.observe(viewLifecycleOwner, Observer {
+                        adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                        recyclerView.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        gotFromDB = it.toMutableList()
+                        viewModel.giveList(it.toMutableList())
+                    })
+                    recyclerView.visibility = View.VISIBLE
+                    shimmerFrameLayout.stopShimmer()
+                    swipeRefreshLayout.isRefreshing = false
+                }else if (isEmpty){
+                    swipeRefreshLayout.isRefreshing = false
+                    shimmerFrameLayout.stopShimmer()
+                    shimmerFrameLayout.visibility = View.INVISIBLE
+                    oops.visibility = View.VISIBLE
+                }
+            }
+            viewModel.nowSearch().observe(viewLifecycleOwner, Observer {
+                adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
+                recyclerView.adapter = adapter
+            })
         }
         swipeRefreshLayout.setColorSchemeResources(
             R.color.purple_300,
@@ -86,11 +151,17 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         shimmerFrameLayout.visibility = View.VISIBLE
         oops.visibility = View.INVISIBLE
         if(isOnline) {
-            viewModel.getDataFromApi(receiveNewsModel).observe(viewLifecycleOwner, Observer {
-                if (it) {
-                    isAllDownloaded = it.toString()
-                }
-            })
+            val isEmptyToken = roomViewModel.isEmptyToken()
+            if (!isEmptyToken){
+                roomViewModel.getObserversApiToken().observe(viewLifecycleOwner, Observer {
+                    apiTokenList = it
+                    viewModel.getDataFromApi(receiveNewsModel, apiTokenList).observe(viewLifecycleOwner, Observer {
+                        if (it) {
+                            isAllDownloaded = it.toString()
+                        }
+                    })
+                })
+            }
             viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
                 gotFromApi = it
                 roomViewModel.setToDB(it, receiveNewsModel).observe(viewLifecycleOwner, Observer {

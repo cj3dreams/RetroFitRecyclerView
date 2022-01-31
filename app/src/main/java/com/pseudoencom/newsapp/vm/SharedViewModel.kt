@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pseudoencom.newsapp.MainRepository
 import com.pseudoencom.newsapp.R
+import com.pseudoencom.newsapp.data.ApiTokenEntity
 import com.pseudoencom.newsapp.data.ArticlesEntity
 import com.pseudoencom.newsapp.model.*
 import kotlinx.coroutines.Dispatchers
@@ -36,9 +37,9 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
         mProfile.value = listOfProfile
     }
 
-    fun getDataFromApi(receiveNewsModel: NewsModel): MutableLiveData<Boolean> {
+    fun getDataFromApi(receiveNewsModel: NewsModel, apiTokenEntity: List<ApiTokenEntity>): MutableLiveData<Boolean> {
         var isApiDownloadedAll:  MutableLiveData<Boolean> = MutableLiveData(false)
-        val response = repository.getAllData(receiveNewsModel)
+        val response = repository.getAllData(receiveNewsModel, apiTokenEntity)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
                 if (response != null) {
@@ -47,18 +48,20 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                         if (responseData != null) {
                             viewModelScope.launch(Dispatchers.IO) {
                                 for (i in 0 until responseData.size) {
-                                    mutableList.add(
-                                        (ArticlesEntity(
-                                            0, 0,
-                                            responseData[i].content,
-                                            responseData[i].description,
-                                            responseData[i].publishedAt,
-                                            responseData[i].source.name,
-                                            responseData[i].title,
-                                            responseData[i].url, responseData[i].urlToImage,
-                                            receiveNewsModel.code, 0, 0
-                                        ))
-                                    )
+                                    if (responseData[i].title != null && responseData[i].title != "") {
+                                        mutableList.add(
+                                            (ArticlesEntity(
+                                                0, 0,
+                                                responseData[i].content,
+                                                responseData[i].description,
+                                                responseData[i].publishedAt,
+                                                responseData[i].source.name,
+                                                responseData[i].title,
+                                                responseData[i].url, responseData[i].urlToImage,
+                                                receiveNewsModel.code, 0, 0
+                                            ))
+                                        )
+                                    }
                                 }
                                 mutableLiveData.postValue(mutableList)
                                 isApiDownloadedAll.postValue(true)
@@ -66,8 +69,8 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                         } else {
                             mutableList.add(
                                 ArticlesEntity(0, 0,
-                                    "Api Token Time Ended",
-                                    "Remove App Please and Type me telegram @cj3dreams",
+                                    "Api Token Time Ended or Incorrect cj3dreams",
+                                    " Add New Token from newpsapi.org or Just Remove App Please and Type me telegram @cj3dreams",
                                     "Api Token Time Ended",
                                     "Api Token Time Ended",
                                     "Api Token Time Ended",
@@ -76,7 +79,7 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                                     "Api Token Time Ended",
                                     0, 0))
                         }
-                        mutableLiveData.postValue(mutableList)
+                    mutableLiveData.postValue(mutableList)
                     isApiDownloadedAll.postValue(true)
                 }
             }

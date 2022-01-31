@@ -11,6 +11,8 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.pseudoencom.newsapp.*
 import com.pseudoencom.newsapp.adapter.ViewPagerAdapter
+import com.pseudoencom.newsapp.data.ApiTokenEntity
+import com.pseudoencom.newsapp.data.RoomViewModel
 import com.pseudoencom.newsapp.model.NewsModel
 import com.pseudoencom.newsapp.vm.MyViewModelFactory
 import com.pseudoencom.newsapp.vm.SharedViewModel
@@ -23,12 +25,15 @@ class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
     private lateinit var viewPager: ViewPager
     private var listener: OnSearchListener? = null
     lateinit var adapter: ViewPagerAdapter
+    lateinit var roomViewModel: RoomViewModel
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel =
             ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(
                 SharedViewModel::class.java
             )
+        roomViewModel = ViewModelProvider(requireActivity()).get(RoomViewModel::class.java)
+
     }
 
     override fun onCreateView(
@@ -53,6 +58,11 @@ class HomeFragment : Fragment(), View.OnClickListener, OnSearchListener {
         viewPager.addOnPageChangeListener(adapter)
         tabLayout = view.findViewById(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
+        val isEmptyToken = roomViewModel.isEmptyToken()
+        if (isEmptyToken){
+            roomViewModel.insertApiToken(ApiTokenEntity(0, "5fcc2e558df247c795f3cd61d74824f9"))
+            roomViewModel.insertApiToken(ApiTokenEntity(0, "5fcc2e558df247c795f3cd61d74824f9"))
+        }
         return view
     }
 

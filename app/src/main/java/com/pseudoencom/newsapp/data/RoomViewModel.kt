@@ -9,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RoomViewModel(app: Application): AndroidViewModel(app) {
+    var apiTokenLive: MutableLiveData<List<ApiTokenEntity>> = MutableLiveData()
+
     var allArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
     var appleArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
     var amazonArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
@@ -38,9 +40,8 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
                val list = articlesDao?.getArticles()
                for (i in 0 until gotFromApi.size) {
-                   if (!list!!.contains(gotFromApi[i])) {
-                       insertNews(gotFromApi[i], newsModel)
-                   }
+                   insertNews(gotFromApi[i], newsModel)
+
                }
             result.postValue(true)
            }
@@ -201,6 +202,25 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
     fun isEmpty(): Boolean{
         val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
         val list = articlesDao?.getArticles()
+        return list!!.size == 0
+    }
+    fun getObserversApiToken(): MutableLiveData<List<ApiTokenEntity>>{
+        getAllApiToken()
+        return apiTokenLive
+    }
+    fun getAllApiToken(){
+        val apiTokenDao = RoomAppDb.getAppDatabase((getApplication()))?.apiTokenDao()
+        val list = apiTokenDao?.getToken()
+        apiTokenLive.postValue(list!!)
+    }
+    fun insertApiToken(apiTokenEntity: ApiTokenEntity){
+        val apiTokenDao = RoomAppDb.getAppDatabase((getApplication()))?.apiTokenDao()
+        apiTokenDao?.insert(apiTokenEntity)
+        getAllApiToken()
+    }
+    fun isEmptyToken(): Boolean{
+        val apiTokenDao = RoomAppDb.getAppDatabase((getApplication()))?.apiTokenDao()
+        val list = apiTokenDao?.getToken()
         return list!!.size == 0
     }
 }

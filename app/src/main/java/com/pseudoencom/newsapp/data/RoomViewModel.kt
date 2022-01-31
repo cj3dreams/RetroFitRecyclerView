@@ -20,9 +20,21 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
     var readLaterArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
     var favoritesArticles: MutableLiveData<List<ArticlesEntity>> = MutableLiveData()
 
+    var allArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var appleArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var amazonArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var facebookArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var googleArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var jetbrainsArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var microsoftArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var teslaArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var readLaterArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
+    var favoritesArticlesB: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    fun setToDB(gotFromApi: MutableList<ArticlesEntity>, newsModel: NewsModel) {
-           viewModelScope.launch(Dispatchers.IO) {
+
+    fun setToDB(gotFromApi: MutableList<ArticlesEntity>, newsModel: NewsModel): MutableLiveData<Boolean>{
+           var result = MutableLiveData<Boolean>(false)
+        viewModelScope.launch(Dispatchers.IO) {
                val articlesDao = RoomAppDb.getAppDatabase((getApplication()))?.articlesDao()
                val list = articlesDao?.getArticles()
                for (i in 0 until gotFromApi.size) {
@@ -30,7 +42,9 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                        insertNews(gotFromApi[i], newsModel)
                    }
                }
+            result.postValue(true)
            }
+        return result
     }
 
     fun getAllSpecialNews(newsModel: NewsModel){
@@ -45,6 +59,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    allArticlesB.postValue(true)
                     allArticles.postValue(mutableList)
                 }
                 "Apple" -> {
@@ -54,6 +69,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    appleArticlesB.postValue(true)
                     appleArticles.postValue(mutableList)
                 }
                 "Amazon" -> {
@@ -63,6 +79,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    amazonArticlesB.postValue(true)
                     amazonArticles.postValue(mutableList)
                 }
                 "Facebook" -> {
@@ -72,6 +89,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    facebookArticlesB.postValue(true)
                     facebookArticles.postValue(mutableList)
                 }
                 "Google" -> {
@@ -81,6 +99,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    googleArticlesB.postValue(true)
                     googleArticles.postValue(mutableList)
                 }
                 "Jetbrains" -> {
@@ -90,6 +109,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    jetbrainsArticlesB.postValue(true)
                     jetbrainsArticles.postValue(mutableList)
                 }
                 "Microsoft" -> {
@@ -99,6 +119,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    microsoftArticlesB.postValue(true)
                     microsoftArticles.postValue(mutableList)
                 }
                 "Tesla" -> {
@@ -108,6 +129,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    teslaArticlesB.postValue(true)
                     teslaArticles.postValue(mutableList)
                 }
                 "isReadLater" -> {
@@ -117,6 +139,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    readLaterArticlesB.postValue(true)
                     readLaterArticles.postValue(mutableList)
                 }
                 "isFavorite" -> {
@@ -126,6 +149,7 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
                             mutableList.add(list[i])
                         }
                     }
+                    favoritesArticlesB.postValue(true)
                     favoritesArticles.postValue(mutableList)
                 }
             }
@@ -146,6 +170,21 @@ class RoomViewModel(app: Application): AndroidViewModel(app) {
              "isReadLater" -> readLaterArticles
              "isFavorite" -> favoritesArticles
             else -> null
+        }
+    }
+    fun getAllNewsObserversBoolean(newsModel: NewsModel): MutableLiveData<Boolean>{
+        return when(newsModel.code) {
+            "Technology" -> allArticlesB
+            "Apple" -> appleArticlesB
+            "Amazon" -> amazonArticlesB
+            "Facebook" -> facebookArticlesB
+            "Google" -> googleArticlesB
+            "Jetbrains" -> jetbrainsArticlesB
+            "Microsoft" -> microsoftArticlesB
+            "Tesla" -> teslaArticlesB
+            "isReadLater" -> readLaterArticlesB
+            "isFavorite" -> favoritesArticlesB
+            else -> MutableLiveData<Boolean>(false)
         }
     }
 

@@ -2,10 +2,13 @@ package com.pseudoencom.newsapp.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pseudoencom.newsapp.MainRepository
 import com.pseudoencom.newsapp.R
 import com.pseudoencom.newsapp.data.ArticlesEntity
 import com.pseudoencom.newsapp.model.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,48 +36,79 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
         mProfile.value = listOfProfile
     }
 
-    fun getDataFromApi(receiveNewsModel: NewsModel) {
+    fun getDataFromApi(receiveNewsModel: NewsModel): MutableLiveData<Boolean> {
+        var isApiDownloadedAll:  MutableLiveData<Boolean> = MutableLiveData(false)
         val response = repository.getAllData(receiveNewsModel)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
                 if (response != null) {
-                    val responseData = response.body()?.articles
-                    val mutableList = mutableListOf<ArticlesEntity>()
-                    if (responseData != null) {
-                        for (i in 0 until responseData.size) {
+                        val responseData = response.body()?.articles
+                        val mutableList = mutableListOf<ArticlesEntity>()
+                        if (responseData != null) {
+                            viewModelScope.launch(Dispatchers.IO) {
+                                for (i in 0 until responseData.size) {
+                                    mutableList.add(
+                                        (ArticlesEntity(
+                                            0, 0,
+                                            responseData[i].content,
+                                            responseData[i].description,
+                                            responseData[i].publishedAt,
+                                            responseData[i].source.name,
+                                            responseData[i].title,
+                                            responseData[i].url, responseData[i].urlToImage,
+                                            receiveNewsModel.code, 0, 0
+                                        ))
+                                    )
+                                }
+                                mutableLiveData.postValue(mutableList)
+                                isApiDownloadedAll.postValue(true)
+                            }
+                        } else {
                             mutableList.add(
-                                (ArticlesEntity(0, 0,
-                                    responseData[i].content,
-                                    responseData[i].description,
-                                    responseData[i].publishedAt,
-                                    responseData[i].source.name,
-                                    responseData[i].title,
-                                    responseData[i].url, responseData[i].urlToImage,
-                                    receiveNewsModel.code, 0, 0)))
+                                ArticlesEntity(
+                                    0,
+                                    0,
+                                    "Api Token Time Ended",
+                                    "Remove App Please and Type me telegram @cj3dreams",
+                                    "Api Token Time Ended",
+                                    "Api Token Time Ended",
+                                    "Api Token Time Ended",
+                                    "Api Token Time Ended",
+                                    "Api Token Time Ended",
+                                    "Api Token Time Ended",
+                                    0,
+                                    0
+                                )
+                            )
                         }
-                    } else {
-                        mutableList.add(ArticlesEntity(
-                                0,
-                                0,
-                                "Api Token Time Ended",
-                                "Remove App Please and Type me telegram @cj3dreams",
-                                "Api Token Time Ended",
-                                "Api Token Time Ended",
-                                "Api Token Time Ended",
-                                "Api Token Time Ended",
-                                "Api Token Time Ended",
-                                "Api Token Time Ended",
-                                0,
-                                0))
-                    }
-                    mutableLiveData.postValue(mutableList)
+                        mutableLiveData.postValue(mutableList)
+                    isApiDownloadedAll.postValue(true)
                 }
             }
 
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
-
+                val mutableList = mutableListOf<ArticlesEntity>()
+                mutableList.add(
+                    ArticlesEntity(
+                        0,
+                        0,
+                        "OnFailure",
+                        "Remove App Please and Type me telegram @cj3dreams",
+                        "Api Token Time Ended",
+                        "Api Token Time Ended",
+                        "Api Token Time Ended",
+                        "Api Token Time Ended",
+                        "Api Token Time Ended",
+                        "Api Token Time Ended",
+                        0,
+                        0
+                    )
+                )
+            mutableLiveData.postValue(mutableList)
+            isApiDownloadedAll.postValue(true)
             }
         })
+        return isApiDownloadedAll
     }
 
     fun searchNews(search: String): MutableList<ArticlesEntity> {

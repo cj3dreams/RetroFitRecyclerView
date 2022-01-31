@@ -51,7 +51,7 @@ class DetailFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         textView.text = idFrom.title
         textView2.text = idFrom.description + "\n \n" +
-                idFrom.publishedAt?.substring(0,9)?.replace("T", " ")?.replace("Z", "")
+                idFrom.publishedAt?.substring(0,10)?.replace("T", " ")?.replace("Z", "")
                 loadImage(context,imageView, idFrom.urlToImage)
         getUrl = idFrom?.url.toString()
         textView3.text = "...read more"
@@ -83,8 +83,10 @@ class DetailFragment : Fragment(), View.OnClickListener {
         val act = activity as MainActivity
         act.backButton.visibility = View.VISIBLE
         act.toolbar.elevation = 7F
+        act.search.visibility = View.INVISIBLE
         if (act.backButton.isPressed){
             act.backButton.visibility = View.GONE
+            act.search.visibility = View.VISIBLE
             act.toolbar.elevation = 0F
         }
     }
@@ -93,7 +95,14 @@ class DetailFragment : Fragment(), View.OnClickListener {
         super.onDestroy()
         val act = activity as MainActivity
         act.backButton.visibility = View.GONE
+        act.search.visibility = View.VISIBLE
         act.toolbar.elevation = 0F
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val act = activity as MainActivity
+        act.search.visibility = View.VISIBLE
     }
 
     override fun onClick(v: View?) {
@@ -102,7 +111,7 @@ class DetailFragment : Fragment(), View.OnClickListener {
                 val fragment = WebViewFragment.getUrl(getUrl)
                 activity?.supportFragmentManager?.beginTransaction()?.apply {
                     replace(R.id.frgChanger, fragment)
-                    addToBackStack("returnFromWeb")
+                    addToBackStack("BackFromWeb")
                         .commit()
                 }
             }

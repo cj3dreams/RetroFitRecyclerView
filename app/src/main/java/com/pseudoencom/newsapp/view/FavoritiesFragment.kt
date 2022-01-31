@@ -33,9 +33,6 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
-
-
-    private val retrofitService = ApiInterface.create()
     var gotFromFavorite  : MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
@@ -140,5 +137,16 @@ class FavoritiesFragment : Fragment(), View.OnClickListener, View.OnLongClickLis
         val act = activity as MainActivity
         act.backButton.visibility = View.GONE
         act.toolbar.elevation = 7F
+        act.search.visibility = View.INVISIBLE
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        val act = activity as MainActivity
+        act.search.visibility = View.VISIBLE
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val act = activity as MainActivity
+        act.search.visibility = View.VISIBLE
     }
 }

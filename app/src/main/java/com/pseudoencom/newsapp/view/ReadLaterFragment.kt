@@ -17,24 +17,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.pseudoencom.newsapp.ApiInterface
-import com.pseudoencom.newsapp.MainActivity
-import com.pseudoencom.newsapp.R
+import com.pseudoencom.newsapp.*
 import com.pseudoencom.newsapp.adapter.MainRecyclerViewAdapter
 import com.pseudoencom.newsapp.data.ArticlesEntity
 import com.pseudoencom.newsapp.data.RoomViewModel
 import com.pseudoencom.newsapp.model.NewsModel
 
-class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, SwipeRefreshLayout.OnRefreshListener{
     private lateinit var recyclerView: RecyclerView
     private lateinit var roomViewModel: RoomViewModel
     private lateinit var adapter: MainRecyclerViewAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
-
-
-    private val retrofitService = ApiInterface.create()
     var gotFromReadLater: MutableList<ArticlesEntity> = mutableListOf()
 
     override fun onAttach(context: Context) {
@@ -137,5 +132,16 @@ class ReadLaterFragment : Fragment(), View.OnClickListener, View.OnLongClickList
         val act = activity as MainActivity
         act.backButton.visibility = View.GONE
         act.toolbar.elevation = 7F
+        act.search.visibility = View.INVISIBLE
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        val act = activity as MainActivity
+        act.search.visibility = View.VISIBLE
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val act = activity as MainActivity
+        act.search.visibility = View.VISIBLE
     }
 }

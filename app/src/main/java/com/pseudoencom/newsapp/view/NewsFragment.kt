@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
 import com.pseudoencom.newsapp.ApiInterface
 import com.pseudoencom.newsapp.MainRepository
 import com.pseudoencom.newsapp.OnSearchListener
@@ -29,6 +30,7 @@ import com.pseudoencom.newsapp.data.RoomViewModel
 import com.pseudoencom.newsapp.model.NewsModel
 import com.pseudoencom.newsapp.vm.MyViewModelFactory
 import com.pseudoencom.newsapp.vm.SharedViewModel
+import kotlin.properties.Delegates
 
 class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, OnSearchListener {
     private lateinit var recyclerView: RecyclerView
@@ -40,6 +42,8 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
     private lateinit var receiveNewsModel: NewsModel
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var oops:ImageView
+    lateinit var isAllDownloaded: String
+    lateinit var isAllUploaded: String
 
     private val retrofitService = ApiInterface.create()
     var gotFromApi: MutableList<ArticlesEntity> = mutableListOf()
@@ -81,10 +85,29 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
         shimmerFrameLayout.visibility = View.VISIBLE
         oops.visibility = View.INVISIBLE
         if(isOnline) {
-            viewModel.getDataFromApi(receiveNewsModel)
+            viewModel.getDataFromApi(receiveNewsModel).observe(viewLifecycleOwner, Observer {
+                Snackbar.make(requireView(),it.toString(),1500).show()
+                if (it) {
+                    isAllDownloaded = it.toString()
+                }
+            })
             viewModel.mutableLiveData.observe(viewLifecycleOwner, Observer {
                 gotFromApi = it
-                roomViewModel.setToDB(it, receiveNewsModel)
+                roomViewModel.setToDB(it, receiveNewsModel).observe(viewLifecycleOwner, Observer {
+                    isAllUploaded = it.toString()
+                    if(isAllUploaded == "true") {
+                        roomViewModel.getAllNewsObserversBoolean(receiveNewsModel).observe(viewLifecycleOwner, Observer {
+                                if (it) {
+                                    isAllUploaded = it.toString()
+                                    if (isAllUploaded == "true" && isAllDownloaded == "true"){
+                                        recyclerView.visibility = View.VISIBLE
+                                        shimmerFrameLayout.stopShimmer()
+                                        swipeRefreshLayout.isRefreshing = false
+                                    }
+                                }
+                            })
+                    }
+                })
                 roomViewModel.getAllNewsObservers(receiveNewsModel)?.observe(viewLifecycleOwner, Observer {
                     adapter = MainRecyclerViewAdapter(requireContext(), it, this, this)
                     recyclerView.adapter = adapter
@@ -93,9 +116,6 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
                     viewModel.giveList(it.toMutableList())
                 })
             })
-            recyclerView.visibility = View.VISIBLE
-            shimmerFrameLayout.stopShimmer()
-            swipeRefreshLayout.isRefreshing = false
         }else if(!isOnline){
             val isEmpty = roomViewModel.isEmpty()
             if(!isEmpty){

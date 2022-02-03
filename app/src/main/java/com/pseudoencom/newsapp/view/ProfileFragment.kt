@@ -1,6 +1,7 @@
 package com.pseudoencom.newsapp.view
 
 import ProfileAdapter
+import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -96,11 +97,11 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
             }
             when (itemData.id) {
-                1 -> showdialog("Change API Token","Enter token", View.VISIBLE, true,"none")
-                2 -> toast("2")
-                3 -> toast("3")
-                4 -> {context?.cacheDir?.deleteRecursively(); toast("Cleaned at " + (context?.cacheDir?.path).toString()); }
-                5 -> showdialog("About me","none", View.INVISIBLE, false, "You can feel free to contact with me \n \n jamshed.saleh@livo.tj \n" + getString(R.string.telegram))
+                1 -> showdialog("Change API Token (You Can Get by Signing Up Here: Newsapi.org)","Enter token (You can break application, be careful!)", View.VISIBLE, true,"none")
+                2 -> {onRefresh(); toast("Refreshed")}
+                3 -> {context?.cacheDir?.deleteRecursively(); toast("Cleaned at " + (context?.cacheDir?.path).toString()); }
+                4 -> {deleteAppData(); toast("All Application Data is Removed. Please, Reopen Application")}
+                5 -> showdialog("About Me","none", View.INVISIBLE, false, "You can feel free to contact with me \n \n jamshed.saleh@livo.tj \n" + "Telegram: cj3dreams")
                 else -> toast("Error of WHEN Operator")
             }
         }
@@ -161,6 +162,16 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.frgChanger, ProfileFragment())
             commit()
+        }
+    }
+    private fun deleteAppData() {
+        try {
+            val act = activity as MainActivity
+            val packageName = act.applicationContext.packageName
+            val runtime = Runtime.getRuntime()
+            runtime.exec("pm clear $packageName")
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

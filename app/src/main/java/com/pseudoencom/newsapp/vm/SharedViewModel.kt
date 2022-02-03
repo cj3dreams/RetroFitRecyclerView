@@ -64,7 +64,7 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                                         )
                                     }
                                 }
-
+                            isApiDownloadedAll.postValue(true)
                         } else {
                             mutableList.add(
                                 ArticlesEntity(0, 0,
@@ -79,7 +79,6 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                                     0, 0))
                         }
                     mutableLiveData.postValue(mutableList)
-                    isApiDownloadedAll.postValue(true)
                 }
             }
             override fun onFailure(call: Call<DataNewsModelClass>?, t: Throwable?) {
@@ -107,10 +106,10 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
     fun getProfile(): ArrayList<ProfileModel> {
         val listOfProfile: ArrayList<ProfileModel> = ArrayList()
         listOfProfile.add(ProfileModel(1, R.drawable.ic_api, "API Token"))
-        listOfProfile.add(ProfileModel(2, R.drawable.ic_sorting, "Sorting"))
-        listOfProfile.add(ProfileModel(3, R.drawable.ic_date, "Date from"))
-        listOfProfile.add(ProfileModel(4, R.drawable.ic_cache, "Clean cache"))
-        listOfProfile.add(ProfileModel(5, R.drawable.ic_about, "About me"))
+        listOfProfile.add(ProfileModel(2, R.drawable.ic_refresh, "Refresh"))
+        listOfProfile.add(ProfileModel(3, R.drawable.ic_remove_cache, "Just Clean a Cache"))
+        listOfProfile.add(ProfileModel(4, R.drawable.ic_clean_database, "Clean Database & Cache (Needs Restart)"))
+        listOfProfile.add(ProfileModel(5, R.drawable.ic_about, "About Me"))
         this.listOfProfile = listOfProfile
         return listOfProfile
     }

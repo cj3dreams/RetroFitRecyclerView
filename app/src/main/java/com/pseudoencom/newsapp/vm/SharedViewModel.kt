@@ -39,6 +39,7 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
 
     fun getDataFromApi(receiveNewsModel: NewsModel, apiTokenEntity: List<ApiTokenEntity>): MutableLiveData<Boolean> {
         var isApiDownloadedAll:  MutableLiveData<Boolean> = MutableLiveData(false)
+        viewModelScope.launch(Dispatchers.IO) {
         val response = repository.getAllData(receiveNewsModel, apiTokenEntity)
         response.enqueue(object : Callback<DataNewsModelClass> {
             override fun onResponse(call: Call<DataNewsModelClass?>, response: Response<DataNewsModelClass>?) {
@@ -46,9 +47,9 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                         val responseData = response.body()?.articles
                         val mutableList = mutableListOf<ArticlesEntity>()
                         if (responseData != null) {
-                            viewModelScope.launch(Dispatchers.IO) {
+
                                 for (i in 0 until responseData.size) {
-                                    if (responseData[i].title != null && responseData[i].title != "") {
+                                    if (responseData[i].title != "") {
                                         mutableList.add(
                                             (ArticlesEntity(
                                                 0, 0,
@@ -63,9 +64,7 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
                                         )
                                     }
                                 }
-                                mutableLiveData.postValue(mutableList)
-                                isApiDownloadedAll.postValue(true)
-                            }
+
                         } else {
                             mutableList.add(
                                 ArticlesEntity(0, 0,
@@ -87,6 +86,7 @@ class SharedViewModel constructor(private val repository: MainRepository) : View
 
             }
         })
+        }
         return isApiDownloadedAll
     }
 

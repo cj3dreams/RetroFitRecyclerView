@@ -142,6 +142,8 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             R.color.purple_700,
             R.color.purple_700
         )
+
+
         return view
     }
 
@@ -222,6 +224,19 @@ class NewsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener,
             replace(R.id.frgChanger, DetailFragment)
             addToBackStack("Back")
                 .commit()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("KEY_LAYOUT", recyclerView.getLayoutManager()?.onSaveInstanceState())
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (savedInstanceState != null) {
+            recyclerView.getLayoutManager()?.onRestoreInstanceState(
+                savedInstanceState.getParcelable("KEY_LAYOUT"))
         }
     }
 
